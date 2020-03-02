@@ -23,7 +23,6 @@ namespace winforms_image_processor
                 subItem.CheckedChanged += StateChange;
                 subItem.CheckOnClick = true;
                 filtersToolStripMenuItem.DropDownItems.Add(subItem);
-
             }
         }
 

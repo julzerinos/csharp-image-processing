@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="FilterManager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

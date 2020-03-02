@@ -22,7 +22,10 @@ namespace winforms_image_processor
             { "Gamma",                  (bmp) => FunctionFilterGamma(bmp) },
             { "Gaussian Blur",          (bmp) => ConvolutionFilterGaussianBlur(bmp) },
             { "Blur",                   (bmp) => ConvolutionFilterBlur(bmp) },
-            
+            { "Brightness Correction",  (bmp) => FunctionFilterBrightness(bmp) },
+            { "Contrast Correction",    (bmp) => FunctionFilterContrast(bmp) },
+
+
         };
 
         public static Bitmap RecreateFilterStateFromState(Bitmap originalImage, List<string> state)
@@ -44,23 +47,44 @@ namespace winforms_image_processor
         static public Bitmap FunctionFilterInversion(Bitmap bmp)
         // Inversion filter     https://stackoverflow.com/questions/33024881/invert-image-faster-in-c-sharp
         {
-            Bitmap bmpInv = new Bitmap(bmp);
-            for (int y = 0; (y <= (bmpInv.Height - 1)); y++)
+            int width = bmp.Width;
+            int height = bmp.Height;
+            BitmapData srcData = bmp.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, bmp.PixelFormat
+                );
+
+            int bytes = srcData.Stride * srcData.Height;
+            byte[] buffer = new byte[bytes];
+            byte[] result = new byte[bytes];
+
+            Marshal.Copy(srcData.Scan0, buffer, 0, bytes);
+            bmp.UnlockBits(srcData);
+
+            int inv = 0;
+            for (int i = 0; i < bytes; i++)
             {
-                for (int x = 0; (x <= (bmpInv.Width - 1)); x++)
-                {
-                    Color inv = bmpInv.GetPixel(x, y);
-                    inv = Color.FromArgb(255, (255 - inv.R), (255 - inv.G), (255 - inv.B));
-                    bmpInv.SetPixel(x, y, inv);
-                }
+                inv = 255 - buffer[i];
+                result[i] = (byte)inv;
             }
+
+            Bitmap bmpInv = new Bitmap(width, height);
+
+            BitmapData resData = bmpInv.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, bmp.PixelFormat
+                );
+
+            Marshal.Copy(result, 0, resData.Scan0, bytes);
+
+            bmpInv.UnlockBits(resData);
             return bmpInv;
         }
 
         static public Bitmap FunctionFilterGamma(Bitmap img)
         // Gamma filter         https://epochabuse.com/csharp-gamma-correction/
         {
-            double gamma = 1.5f;
+            double gamma = Constants.filterGammaValue;
             double c = 1d;
 
             int width = img.Width;
@@ -70,7 +94,7 @@ namespace winforms_image_processor
             int bytes = srcData.Stride * srcData.Height;
             byte[] buffer = new byte[bytes];
             byte[] result = new byte[bytes];
-            System.Runtime.InteropServices.Marshal.Copy(srcData.Scan0, buffer, 0, bytes);
+            Marshal.Copy(srcData.Scan0, buffer, 0, bytes);
             img.UnlockBits(srcData);
             int current = 0;
             int cChannels = 3;
@@ -96,92 +120,99 @@ namespace winforms_image_processor
             return resImg;
         }
 
-        //static public Bitmap FunctionFilterBrightness(Bitmap bmp)
-        ////Brightness correct    https://www.developerfusion.com/article/5441/image-manipulation-brightness-and-contrast/2/
-        //{
-        //    int r, g, b = 0;
+        static public Bitmap FunctionFilterBrightness(Bitmap bmp)
+        //Brightness correct    https://www.developerfusion.com/article/5441/image-manipulation-brightness-and-contrast/2/
+        //Brightness algorithm  https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-4-brightness-adjustment/
+        {
+            int brightness = 10;
 
-        //    //Ready the whole bitmap for reading and writing
-        //    BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadWrite, bmp.PixelFormat);
+            int width = bmp.Width;
+            int height = bmp.Height;
+            BitmapData srcData = bmp.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, bmp.PixelFormat
+                );
 
-        //    unsafe
-        //    {
-        //        //Sets the pointer to the first pixel
-        //        byte* ptr = (byte*)bmpData.Scan0;
-        //        int bytesPerPixel = SupportFunctions.BytesPerPixel(bmp.PixelFormat);
+            int bytes = srcData.Stride * srcData.Height;
+            byte[] buffer = new byte[bytes];
+            byte[] result = new byte[bytes];
 
-        //        /*Line offset for pointer.  
-        //        Since we only have 3 bytes per pixel in this format
-        //        and since lines are aligned at 4 byte boundaries
-        //        we may need this for certain sized bitmaps)*/
-        //        int remain = bmpData.Stride - bmpData.Width * bytesPerPixel;
+            Marshal.Copy(srcData.Scan0, buffer, 0, bytes);
+            bmp.UnlockBits(srcData);
 
-        //        //Check for darken/lighten outside of loop to improve speed
-        //        //Loops over each pixel
-        //        if (darken == false)
-        //        {
-        //            for (int y = 0; y < bmpData.Height; y++)
-        //            {
-        //                for (int x = 0; x < bmpData.Width; x++)
-        //                {
-        //                    b = (int)ptr[0] + adjustment;
-        //                    g = (int)ptr[1] + adjustment;
-        //                    r = (int)ptr[2] + adjustment;
+            int brAdj = 0;
+            for (int i = 0; i < bytes; i++)
+            {
+                if (brightness > 0)
+                    brAdj = Math.Min(buffer[i] + brightness, 255);
+                if (brightness < 0)
+                    brAdj = Math.Max(buffer[i] + brightness, 0);
+                result[i] = (byte)brAdj;
+            }
 
-        //                    if (b > 255)
-        //                        b = 255;
-        //                    if (g > 255)
-        //                        g = 255;
-        //                    if (r > 255)
-        //                        r = 255;
+            Bitmap bmpInv = new Bitmap(width, height);
 
-        //                    ptr[0] = (byte)b;
-        //                    ptr[1] = (byte)g;
-        //                    ptr[2] = (byte)r;
+            BitmapData resData = bmpInv.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, bmp.PixelFormat
+                );
 
-        //                    ptr += bytesPerPixel;
-        //                }
+            Marshal.Copy(result, 0, resData.Scan0, bytes);
 
-        //                ptr += remain;
-        //            }
-        //        }
-        //        else //(darken == true)
-        //        {
-        //            for (int y = 0; y < bmpData.Height; y++)
-        //            {
-        //                for (int x = 0; x < bmpData.Width; x++)
-        //                {
-        //                    b = (int)ptr[0] - adjustment;
-        //                    g = (int)ptr[1] - adjustment;
-        //                    r = (int)ptr[2] - adjustment;
+            bmpInv.UnlockBits(resData);
+            return bmpInv;
 
-        //                    if (b < 0)
-        //                        b = 0;
-        //                    if (g < 0)
-        //                        g = 0;
-        //                    if (r < 0)
-        //                        r = 0;
+        }
 
-        //                    ptr[0] = (byte)b;
-        //                    ptr[1] = (byte)g;
-        //                    ptr[2] = (byte)r;
+        static public Bitmap FunctionFilterContrast(Bitmap bmp)
+        //Contrast algorithm    https://www.dfstudios.co.uk/articles/programming/image-programming-algorithms/image-processing-algorithms-part-5-contrast-adjustment/
+        {
+            int threshold = -50;
+            var contrast = Math.Pow((100 + threshold) / 100, 2);
 
-        //                    ptr += bytesPerPixel;
-        //                }
+            int width = bmp.Width;
+            int height = bmp.Height;
+            BitmapData srcData = bmp.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb
+                );
 
-        //                ptr += remain;
-        //            }
-        //        }
-        //    }
+            Debug.Print(bmp.PixelFormat.ToString());
 
-        //    bmp.UnlockBits(bmpData);
-        //    return bmp;
-        //}
+            int bytes = srcData.Stride * srcData.Height;
+            byte[] buffer = new byte[bytes];
+            byte[] result = new byte[bytes];
+
+            Marshal.Copy(srcData.Scan0, buffer, 0, bytes);
+            bmp.UnlockBits(srcData);
+
+            int cnt = 0, value;
+            for (int i = 0; i < bytes; i++)
+            {
+                if ((i + 1) % 4 == 0) continue;
+                value = (int)((((buffer[i] / 255) - 0.5) * contrast) + 0.5) * 255;
+                cnt = (value < 0) ? 0 : (value > 255) ? 255 : value;
+                result[i] = (byte)cnt;
+            }
+
+            Bitmap bmpInv = new Bitmap(width, height);
+
+            BitmapData resData = bmpInv.LockBits(
+                new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb
+                );
+
+            Marshal.Copy(result, 0, resData.Scan0, bytes);
+
+            bmpInv.UnlockBits(resData);
+            return bmpInv;
+
+        }
 
         /////////////////////////
         // Convultion Filters //
         ///////////////////////
-        
+
         static public Bitmap ConvolutionFilterSharpen(Bitmap image)
         // Sharpen filter:      https://stackoverflow.com/questions/903632/sharpen-on-a-bitmap-using-c-sharp/1319999
         {

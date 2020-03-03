@@ -36,6 +36,7 @@
             this.OpenImageFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveImageFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customKernelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -82,7 +83,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenu,
-            this.filtersToolStripMenuItem});
+            this.filtersToolStripMenuItem,
+            this.customKernelToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(678, 24);
@@ -119,6 +121,13 @@
             this.filtersToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.filtersToolStripMenuItem.Text = "Filters";
             // 
+            // customKernelToolStripMenuItem
+            // 
+            this.customKernelToolStripMenuItem.Name = "customKernelToolStripMenuItem";
+            this.customKernelToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+            this.customKernelToolStripMenuItem.Text = "Custom Kernel";
+            this.customKernelToolStripMenuItem.Click += new System.EventHandler(this.customKernelToolStripMenuItem_Click);
+            // 
             // ImageProcessorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -151,6 +160,7 @@
         private System.Windows.Forms.ToolStripMenuItem OpenImageFileMenu;
         private System.Windows.Forms.ToolStripMenuItem SaveImageFileMenu;
         private System.Windows.Forms.ToolStripMenuItem filtersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customKernelToolStripMenuItem;
     }
 }
 

@@ -26,21 +26,6 @@ namespace winforms_image_processor
             }
         }
 
-        //public void UpdateToolStripCheckedChanged(ToolStripMenuItem tsmi)
-        ////Recursion for toolstrip: https://stackoverflow.com/questions/33766276/cannot-get-all-the-submenu-items-in-winform-in-c-sharp
-        //{
-        //    if (tsmi.DropDownItems.Count == 0)
-        //    {
-        //        tsmi.CheckedChanged += StateChange;
-        //        return;
-        //    }
-
-        //    foreach (ToolStripMenuItem innerTsmi in tsmi.DropDownItems)
-        //    {
-        //        UpdateToolStripCheckedChanged(innerTsmi);
-        //    }
-        //}
-
         private void StateChange(object sender, EventArgs e)
         {
             ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
@@ -104,6 +89,10 @@ namespace winforms_image_processor
             }
         }
 
-
+        private void customKernelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            KernelEditor kernelEditor = new KernelEditor();
+            kernelEditor.ShowDialog();
+        }
     }
 }

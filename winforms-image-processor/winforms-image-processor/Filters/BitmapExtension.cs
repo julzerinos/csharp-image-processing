@@ -29,6 +29,7 @@ namespace winforms_image_processor
 
             return buffer;
         }
+
         public static byte[] GetBitmapDataBytes(this Bitmap bmp)
         {
             int width = bmp.Width;
@@ -59,7 +60,7 @@ namespace winforms_image_processor
             bmp.UnlockBits(resData);
         }
 
-        static public Bitmap FunctionFilterGeneral(this Bitmap bmp, Func<byte[], byte[]> filter)
+        static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], byte[]> filter)
         {
             byte[] buffer = bmp.GetBitmapDataBytes();
             byte[] result = filter(buffer);
@@ -70,15 +71,15 @@ namespace winforms_image_processor
             return bmpRes;
         }
 
-        //static public Bitmap ConvFilterGeneral(this Bitmap bmp, Func<byte[], byte[]> filter, byte[][] kernel)
-        //{
-        //    byte[] buffer = bmp.GetBitmapDataBytes();
-        //    byte[] result = filter(buffer);
+        static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], int, double[,], byte[]> filter, double[,] kernel)
+        {
+            byte[] buffer = bmp.GetBitmapDataBytes(out int stride);
+            byte[] result = filter(buffer, stride, kernel);
 
-        //    Bitmap bmpInv = new Bitmap(bmp.Width, bmp.Height);
-        //    bmpInv.SetBitmapDataBytes(result);
+            Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
+            bmpRes.SetBitmapDataBytes(result);
 
-        //    return bmpInv;
-        //}
+            return bmpRes;
+        }
     }
 }

@@ -27,6 +27,8 @@ namespace winforms_image_processor
             { "Box Blur",               (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.BoxBlurKernel.GetKernel()) },
             { "Emboss",                 (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.EmbossKernel.GetKernel()) },
             { "Outline",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.OutlineKernel.GetKernel()) },
+
+            { "Custom Kernel",          (bmp) => {if (Kernel.customKernel.divisor != 0) bmp.ApplyFilter(ApplyKernel, Kernel.customKernel.GetKernel())} },
         };
 
         public static Bitmap RecreateFilterStateFromState(Bitmap originalImage, List<string> state)

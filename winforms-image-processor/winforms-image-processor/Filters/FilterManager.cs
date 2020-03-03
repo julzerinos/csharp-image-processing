@@ -114,6 +114,8 @@ namespace winforms_image_processor
             byte[] buffer = bmp.GetBitmapDataBytes(out stride);
             byte[] result = new byte[buffer.Length];
 
+            Console.WriteLine(stride);
+
             // 1D Bitmap byte data
             for (int i = 0; i < buffer.Length; i++)
             {
@@ -123,24 +125,28 @@ namespace winforms_image_processor
                     continue;
                 }
 
-                double newByte = 0;
+                int newByte = 0;
 
                 // Kernel Columns
-                for (int j = -kernel.GetLength(0) / 2; j <= kernel.GetLength(0) / 2; j++)
+                for (int j = - kernel.GetLength(0) / 2; j <= kernel.GetLength(0) / 2; j++)
                 {
-                    if ((i + 4 * j < 0) || (i + 4 * j >= buffer.Length)) continue;
+                    if ((i + 4 * j < 0) || (i + 4 * j >= buffer.Length)) break;
 
                     // Kernel Rows
                     for (int k = -kernel.GetLength(1) / 2; k <= kernel.GetLength(1) / 2; k++)
                     {
-                        if ((i + 4 * j + k * stride < 0) || (i + 4 * j + k * stride >= buffer.Length)) continue;
+                        if ((i + 4 * j + k * stride < 0) || (i + 4 * j + k * stride >= buffer.Length))
+                        {
+                            newByte = 0;
+                            break;
+                        }
 
-                        newByte += kernel[j + kernel.GetLength(0) / 2, k + kernel.GetLength(1) / 2] * buffer[i + 4 * j + k * stride];
-
+                        newByte += (int)kernel[j + kernel.GetLength(0) / 2, k + kernel.GetLength(1) / 2] 
+                            * buffer[i + 4 * j + k * stride];
                     }
                 }
 
-                result[i] = (byte)newByte;
+                result[i] = (byte)(newByte < 0 ? 0 : newByte > 255 ? 255 : newByte);
             }
 
             Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
@@ -152,16 +158,21 @@ namespace winforms_image_processor
         static public Bitmap ConvolutionFilterSharpen(Bitmap bmp)
         // Sharpen filter:      https://stackoverflow.com/questions/903632/sharpen-on-a-bitmap-using-c-sharp/1319999
         {
-            //double[,] kernel = new double[,] {
-            //    { 0, -1, 0 },
-            //    { -1, 5, -1 },
-            //    { 0, -1, 0 }
-            //};
             double[,] kernel = new double[,] {
-                { 0.0625, 0.125, 0.0625 },
-                { 0.125, 0.25, 0.125 },
-                { 0.0625, 0.125, 0.0625 }
+                { 0, -1, 0 },
+                { -1, 5, -1 },
+                { 0, -1, 0 }
             };
+            //double[,] kernel = new double[,] {
+            //    { -1, -1, -1 },
+            //    { -1, 9, -1 },
+            //    { -1, -1, -1 }
+            //};
+            //double[,] kernel = new double[,] {
+            //    { 0.0625, 0.125, 0.0625 },
+            //    { 0.125, 0.25, 0.125 },
+            //    { 0.0625, 0.125, 0.0625 }
+            //};
 
             return ApplyKernel(bmp, kernel);
 

@@ -36,14 +36,19 @@ namespace winforms_image_processor
                 + " ] is " + (CacheManager.GetBitmapForFilterState() == null ? "null" : "not null")
                 );
 
+            UpdateCacheIfEmpty();
+
+            FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+        }
+
+        public void UpdateCacheIfEmpty()
+        {
             if (CacheManager.GetBitmapForFilterState() == null)
                 CacheManager.SetBitmapForFilterState(
                     FilterManager.RecreateFilterStateFromState(
                         CacheManager.GetOriginalImage(), CacheManager.filterState
                         )
                     );
-
-            FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
         }
 
         private void OpenImageFileMenu_Click(object sender, EventArgs e)
@@ -70,6 +75,8 @@ namespace winforms_image_processor
             FltPictureBox.Image = new Bitmap(filePath);
 
             filtersToolStripMenuItem.Enabled = true;
+            SaveImageFileMenu.Enabled = true;
+            customKernelToolStripMenuItem.Enabled = true;
 
             CacheManager.InitializeWithOriginal((Bitmap)FltPictureBox.Image);
         }
@@ -91,8 +98,13 @@ namespace winforms_image_processor
 
         private void customKernelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KernelEditor kernelEditor = new KernelEditor();
-            kernelEditor.ShowDialog();
+            KernelEditor kernelEditor = new KernelEditor(this);
+            if (kernelEditor.ShowDialog() == DialogResult.Cancel) return;
+
+            CacheManager.ResetCache((Bitmap)OrgPictureBox.Image);
+            UpdateCacheIfEmpty();
+
+            FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
         }
     }
 }

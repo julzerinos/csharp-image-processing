@@ -103,14 +103,15 @@
             // OpenImageFileMenu
             // 
             this.OpenImageFileMenu.Name = "OpenImageFileMenu";
-            this.OpenImageFileMenu.Size = new System.Drawing.Size(176, 22);
+            this.OpenImageFileMenu.Size = new System.Drawing.Size(180, 22);
             this.OpenImageFileMenu.Text = "Open Image";
             this.OpenImageFileMenu.Click += new System.EventHandler(this.OpenImageFileMenu_Click);
             // 
             // SaveImageFileMenu
             // 
+            this.SaveImageFileMenu.Enabled = false;
             this.SaveImageFileMenu.Name = "SaveImageFileMenu";
-            this.SaveImageFileMenu.Size = new System.Drawing.Size(176, 22);
+            this.SaveImageFileMenu.Size = new System.Drawing.Size(180, 22);
             this.SaveImageFileMenu.Text = "Save Filtered Image";
             this.SaveImageFileMenu.Click += new System.EventHandler(this.SaveImageFileMenu_Click);
             // 
@@ -123,6 +124,7 @@
             // 
             // customKernelToolStripMenuItem
             // 
+            this.customKernelToolStripMenuItem.Enabled = false;
             this.customKernelToolStripMenuItem.Name = "customKernelToolStripMenuItem";
             this.customKernelToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.customKernelToolStripMenuItem.Text = "Custom Kernel";

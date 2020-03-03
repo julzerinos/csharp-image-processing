@@ -18,12 +18,21 @@ namespace winforms_image_processor
             SetUpKernelEditor();
         }
 
-
+        private ImageProcessorForm imageProcessorForm;
+        public KernelEditor(Form callingForm)
+        {
+            imageProcessorForm = callingForm as ImageProcessorForm;
+            InitializeComponent();
+            SetUpKernelEditor();
+        }
 
         public void SetUpKernelEditor()
         {
 
             CustomKernel customKernel = Kernel.customKernel;
+
+            numericUpDownDivisor.Minimum = decimal.MinValue;
+            numericUpDownDivisor.Maximum = decimal.MaxValue;
 
             numericUpDownDivisor.Value = customKernel.divisor;
             numericUpDown1.Value = customKernel.kernel.GetLength(0);
@@ -43,6 +52,8 @@ namespace winforms_image_processor
                 {
                     NumericUpDown numericUpDown = new NumericUpDown();
                     tableLayoutPanel1.Controls.Add(numericUpDown, column, row);
+                    numericUpDown.Minimum = decimal.MinValue;
+                    numericUpDown.Maximum = decimal.MaxValue;
                     numericUpDown.Value = (decimal)kernel[column, row];
                     numericUpDown.Dock = DockStyle.Fill;
                 }
@@ -66,6 +77,8 @@ namespace winforms_image_processor
                     tableLayoutPanel1.Controls.Add(numericUpDown, column, row);
                     numericUpDown.Value = 0;
                     numericUpDown.Dock = DockStyle.Fill;
+                    numericUpDown.Minimum = decimal.MinValue;
+                    numericUpDown.Maximum = decimal.MaxValue;
                 }
             }
         }
@@ -88,15 +101,17 @@ namespace winforms_image_processor
             {
                 foreach (double i in kernel)
                     value += (int)i;
-
                 numericUpDownDivisor.Value = value;
             }
+            if (value == 0)
+                numericUpDownDivisor.Value = 1;
 
             Kernel.customKernel = new CustomKernel(kernel, value);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -123,6 +138,9 @@ namespace winforms_image_processor
         private void button1_Click(object sender, EventArgs e)
         {
             SetKernelFromEditor();
+
+            DialogResult = DialogResult.OK;
+
             Close();
         }
     }

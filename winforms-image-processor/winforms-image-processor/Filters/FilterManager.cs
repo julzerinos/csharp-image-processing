@@ -22,13 +22,13 @@ namespace winforms_image_processor
             { "Brightness Correction",  (bmp) => bmp.ApplyFilter(Brightness) },
             { "Contrast Correction",    (bmp) => bmp.ApplyFilter(Contrast) },
 
-            { "Sharpen",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.SharpenKernel.GetKernel()) },
-            { "Gaussian Blur",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.GaussianBlurKernel.GetKernel()) },
-            { "Box Blur",               (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.BoxBlurKernel.GetKernel()) },
-            { "Emboss",                 (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.EmbossKernel.GetKernel()) },
-            { "Outline",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.OutlineKernel.GetKernel()) },
+            { "Sharpen",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.SharpenKernel) },
+            { "Gaussian Blur",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.GaussianBlurKernel) },
+            { "Box Blur",               (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.BoxBlurKernel) },
+            { "Emboss",                 (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.EmbossKernel) },
+            { "Outline",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.OutlineKernel) },
 
-            { "Custom Kernel",          (bmp) => {if (Kernel.customKernel.divisor != 0) bmp.ApplyFilter(ApplyKernel, Kernel.customKernel.GetKernel())} },
+            { "Custom Kernel",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.customKernel) },
         };
 
         public static Bitmap RecreateFilterStateFromState(Bitmap originalImage, List<string> state)
@@ -112,8 +112,9 @@ namespace winforms_image_processor
         // Convultion Filters //
         ///////////////////////
 
-        static public byte[] ApplyKernel(byte[] buffer, int stride, double[,] kernel)
+        static public byte[] ApplyKernel(byte[] buffer, int stride, CustomKernel customKernel)
         {
+            double[,] kernel = customKernel.kernel;
             byte[] result = new byte[buffer.Length];
 
             // 1D Bitmap byte data
@@ -149,7 +150,8 @@ namespace winforms_image_processor
                         newByte += kernel[
                             j + kernel.GetLength(0) / 2,
                             k + kernel.GetLength(1) / 2]
-                            * buffer[i + 4 * j + k * stride];
+                            * buffer[i + 4 * j + k * stride]
+                            + customKernel.offset;
                     }
                 }
 

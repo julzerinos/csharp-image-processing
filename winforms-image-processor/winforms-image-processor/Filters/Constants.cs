@@ -12,7 +12,6 @@ namespace winforms_image_processor
 
         public static double filterBrightnessValue = 10;
 
-        public static double filterContrastValue = 10;
-
+        public static double filterContrastValue = 10
     }
 }

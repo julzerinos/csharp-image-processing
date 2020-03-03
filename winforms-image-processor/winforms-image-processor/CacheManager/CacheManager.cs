@@ -38,6 +38,16 @@ namespace winforms_image_processor
                 filterState.Remove(filter);
         }
 
+        public static void ResetCache(Bitmap bmp)
+        {
+            cachedFilterStates.Clear();
+
+            cachedFilterStates = new Dictionary<List<string>, Bitmap>(new StringListEqComparer())
+            {
+                { new List<string>(), DeepCopy(bmp)}
+            };
+        }
+
         public static Bitmap GetBitmapForFilterState() => cachedFilterStates.ContainsKey(filterState) ? cachedFilterStates[filterState] : null;
 
         public static void SetBitmapForFilterState(Bitmap bmp) => cachedFilterStates[filterState] = DeepCopy(bmp);

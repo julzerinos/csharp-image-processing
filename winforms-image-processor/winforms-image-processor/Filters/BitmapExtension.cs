@@ -71,14 +71,14 @@ namespace winforms_image_processor
             return bmpRes;
         }
 
-        static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], int, double[,], byte[]> filter, double[,] kernel)
+        static public Bitmap ApplyFilter(this Bitmap bmp, Func<byte[], int, CustomKernel, byte[]> filter, CustomKernel customKernel)
         {
             byte[] buffer = bmp.GetBitmapDataBytes(out int stride);
-            byte[] result = filter(buffer, stride, kernel);
+            byte[] result = filter(buffer, stride, customKernel);
 
             Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
             bmpRes.SetBitmapDataBytes(result);
-
+            
             return bmpRes;
         }
     }

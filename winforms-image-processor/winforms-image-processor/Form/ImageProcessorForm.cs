@@ -24,6 +24,8 @@ namespace winforms_image_processor
                 subItem.CheckOnClick = true;
                 filtersToolStripMenuItem.DropDownItems.Add(subItem);
             }
+
+            FltPictureBox.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void StateChange(object sender, EventArgs e)
@@ -105,6 +107,11 @@ namespace winforms_image_processor
             UpdateCacheIfEmpty();
 
             FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(FltPictureBox.Image);
         }
     }
 }

@@ -114,7 +114,7 @@ namespace winforms_image_processor
 
         static public byte[] ApplyKernel(byte[] buffer, int stride, CustomKernel customKernel)
         {
-            double[,] kernel = customKernel.kernel;
+            double[,] kernel = customKernel.GetKernel();
             byte[] result = new byte[buffer.Length];
 
             // 1D Bitmap byte data
@@ -130,7 +130,9 @@ namespace winforms_image_processor
                 bool ignorePixel = false;
 
                 // Kernel Columns
-                for (int j = -kernel.GetLength(0) / 2; j <= kernel.GetLength(0) / 2; j++)
+                int lowerColBound = -kernel.GetLength(0) / 2 - customKernel.anchor.X;
+                int upperColBound = kernel.GetLength(0) / 2 - customKernel.anchor.X;
+                for (int j = lowerColBound; j <= upperColBound; j++)
                 {
                     if ((i + 4 * j < 0) || (i + 4 * j >= buffer.Length) || ignorePixel)
                     {
@@ -139,7 +141,9 @@ namespace winforms_image_processor
                     }
 
                     // Kernel Rows
-                    for (int k = -kernel.GetLength(1) / 2; k <= kernel.GetLength(1) / 2; k++)
+                    int lowerRowBound = -kernel.GetLength(1) / 2 - customKernel.anchor.Y;
+                    int upperRowBound = kernel.GetLength(1) / 2 - customKernel.anchor.Y;
+                    for (int k = lowerRowBound; k <= upperRowBound; k++)
                     {
                         if ((i + 4 * j + k * stride < 0) || (i + 4 * j + k * stride >= buffer.Length))
                         {
@@ -148,8 +152,8 @@ namespace winforms_image_processor
                         }
 
                         newByte += kernel[
-                            j + kernel.GetLength(0) / 2,
-                            k + kernel.GetLength(1) / 2]
+                            j - lowerColBound,
+                            k - lowerRowBound]
                             * buffer[i + 4 * j + k * stride]
                             + customKernel.offset;
                     }

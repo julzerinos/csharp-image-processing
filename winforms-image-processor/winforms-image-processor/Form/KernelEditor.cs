@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace winforms_image_processor
@@ -26,23 +21,43 @@ namespace winforms_image_processor
             SetUpKernelEditor();
         }
 
+        public static List<string> filterTypes = new List<string>()
+        {
+            "",
+            "Sharpen",
+            "Gaussian Blur",
+            "Box Blur",
+            "Emboss",
+            "Outline"
+        };
+
         public void SetUpKernelEditor()
         {
-
             CustomKernel customKernel = Kernel.customKernel;
 
-            numericUpDownDivisor.Minimum = decimal.MinValue;
-            numericUpDownDivisor.Maximum = decimal.MaxValue;
+            CBFilterType.DataSource = filterTypes;
 
-            numericUpDownDivisor.Value = customKernel.divisor;
-            numericUpDown1.Value = customKernel.kernel.GetLength(0);
-            numericUpDown2.Value = customKernel.kernel.GetLength(1);
+            NUDDivisor.Minimum = decimal.MinValue;
+            NUDDivisor.Maximum = decimal.MaxValue;
+
+            NUDDivisor.Value = customKernel.divisor;
+            NUDKernelColumn.Value = customKernel.kernel.GetLength(0);
+            NUDKernelRow.Value = customKernel.kernel.GetLength(1);
+
+            NUDOffset.Value = customKernel.offset;
+            NUDAnchorCol.Value = customKernel.anchor.X;
+            NUDAnchorRow.Value = customKernel.anchor.Y;
 
             SetUpTableLayout(customKernel.kernel.GetLength(0), customKernel.kernel.GetLength(1), customKernel.kernel);
         }
 
         public void SetUpTableLayout(int columns, int rows, double[,] kernel)
         {
+            for (int row = 0; row < tableLayoutPanel1.RowCount; row++)
+                for (int column = 0; column < tableLayoutPanel1.ColumnCount; column++)
+                    if (tableLayoutPanel1.GetControlFromPosition(column, row) != null)
+                        tableLayoutPanel1.GetControlFromPosition(column, row).Dispose();
+
             tableLayoutPanel1.ColumnCount = columns;
             tableLayoutPanel1.RowCount = rows;
 
@@ -95,18 +110,23 @@ namespace winforms_image_processor
                 }
             }
 
-            int value = (int)numericUpDownDivisor.Value;
+            int value = (int)NUDDivisor.Value;
 
             if (value == 0)
             {
                 foreach (double i in kernel)
                     value += (int)i;
-                numericUpDownDivisor.Value = value;
+                NUDDivisor.Value = value;
             }
             if (value == 0)
-                numericUpDownDivisor.Value = 1;
+                NUDDivisor.Value = 1;
 
-            Kernel.customKernel = new CustomKernel(kernel, value);
+            Kernel.customKernel = new CustomKernel(
+                kernel,
+                value,
+                (int)NUDOffset.Value,
+                new Point((int)NUDAnchorCol.Value, (int)NUDAnchorRow.Value)
+                );
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -130,11 +150,6 @@ namespace winforms_image_processor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            SetUpTableLayout((int)numericUpDown1.Value, (int)numericUpDown2.Value);
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             SetKernelFromEditor();
@@ -142,6 +157,38 @@ namespace winforms_image_processor
             DialogResult = DialogResult.OK;
 
             Close();
+        }
+
+        private void Redraw_Click(object sender, EventArgs e)
+        {
+            switch ((string)CBFilterType.SelectedItem)
+            {
+                case "":
+                    SetUpTableLayout((int)NUDKernelColumn.Value, (int)NUDKernelRow.Value);
+                    break;
+                case "Sharpen":
+                    SetUpTableLayout(3, 3, Kernel.SharpenKernel.kernel);
+                    NUDDivisor.Value = Kernel.SharpenKernel.divisor;
+                    break;
+                case "Gaussian Blur":
+                    SetUpTableLayout(3, 3, Kernel.GaussianBlurKernel.kernel);
+                    NUDDivisor.Value = Kernel.GaussianBlurKernel.divisor;
+                    break;
+                case "Box Blur":
+                    SetUpTableLayout(3, 3, Kernel.BoxBlurKernel.kernel);
+                    NUDDivisor.Value = Kernel.BoxBlurKernel.divisor;
+                    break;
+                case "Emboss":
+                    SetUpTableLayout(3, 3, Kernel.EmbossKernel.kernel);
+                    NUDDivisor.Value = Kernel.EmbossKernel.divisor;
+                    break;
+                case "Outline":
+                    SetUpTableLayout(3, 3, Kernel.OutlineKernel.kernel);
+                    NUDDivisor.Value = Kernel.OutlineKernel.divisor;
+                    break;
+            }
+
+            CBFilterType.SelectedIndex = 0;
         }
     }
 }

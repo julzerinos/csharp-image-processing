@@ -53,7 +53,6 @@ namespace winforms_image_processor
     public static class Kernel
     {
         public static Dictionary<string, CustomKernel> customKernels = new Dictionary<string, CustomKernel>();
-        // public static CustomKernel customKernel = new CustomKernel(new double[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } }, 1, 0, Point.Empty);
 
         public static CustomKernel SharpenKernel = new CustomKernel(new double[3, 3] { { 0, -1, 0 }, { -1, 5, -1 }, { 0, -1, 0 } }, 1, 0, Point.Empty);
         public static CustomKernel OutlineKernel = new CustomKernel(new double[3, 3] { { -1, -1, -1 }, { -1, 8, -1 }, { -1, -1, -1 } }, 1, 0, Point.Empty);

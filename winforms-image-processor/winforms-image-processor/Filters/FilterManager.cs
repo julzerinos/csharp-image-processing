@@ -27,8 +27,6 @@ namespace winforms_image_processor
             { "Box Blur",               (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.BoxBlurKernel) },
             { "Emboss",                 (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.EmbossKernel) },
             { "Outline",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.OutlineKernel) },
-
-            //{ "Custom Kernel",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.customKernel) },
         };
 
         public static void UpdateFilterMapping(string filter)

@@ -17,6 +17,8 @@ namespace winforms_image_processor
         {
             InitializeComponent();
 
+            Console.WriteLine("test" + 1);
+
             foreach (var filter in FilterManager.filterMapping)
             {
                 ToolStripMenuItem subItem = new ToolStripMenuItem(filter.Key);
@@ -100,7 +102,19 @@ namespace winforms_image_processor
 
         private void customKernelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            KernelEditor kernelEditor = new KernelEditor(this);
+            //KernelEditor kernelEditor = new KernelEditor(this);
+            //if (kernelEditor.ShowDialog() == DialogResult.Cancel) return;
+
+            //CacheManager.ResetCache((Bitmap)OrgPictureBox.Image);
+            //UpdateCacheIfEmpty();
+
+            //FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+        }
+
+        public void OpenKernelEditor(object sender, EventArgs e)
+        {
+            ToolStripMenuItem ts = sender as ToolStripMenuItem;
+            KernelEditor kernelEditor = new KernelEditor(this, ts.OwnerItem.Text);
             if (kernelEditor.ShowDialog() == DialogResult.Cancel) return;
 
             CacheManager.ResetCache((Bitmap)OrgPictureBox.Image);
@@ -112,6 +126,29 @@ namespace winforms_image_processor
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetImage(FltPictureBox.Image);
+        }
+
+        static public int customKernelCounter = 0;
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string name = "Custom Kernel " + ++customKernelCounter;
+            ToolStripMenuItem ts = new ToolStripMenuItem(name);
+
+            ToolStripMenuItem tsEdit = new ToolStripMenuItem("Edit");
+
+            tsEdit.Click += OpenKernelEditor;
+
+            ts.CheckOnClick = true;
+            ts.CheckedChanged += StateChange;
+
+            ts.DropDownItems.Add(tsEdit);
+
+            Kernel.customKernels.Add(name, new CustomKernel(new double[3, 3] { { 0, 0, 0 }, { 0, 1, 0 }, { 0, 0, 0 } }, 1, 0, Point.Empty));
+
+            FilterManager.UpdateFilterMapping(name);
+
+            filtersToolStripMenuItem.DropDownItems.Add(ts);
         }
     }
 }

@@ -40,6 +40,7 @@
             this.customKernelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -107,7 +108,7 @@
             // OpenImageFileMenu
             // 
             this.OpenImageFileMenu.Name = "OpenImageFileMenu";
-            this.OpenImageFileMenu.Size = new System.Drawing.Size(180, 22);
+            this.OpenImageFileMenu.Size = new System.Drawing.Size(176, 22);
             this.OpenImageFileMenu.Text = "Open Image";
             this.OpenImageFileMenu.Click += new System.EventHandler(this.OpenImageFileMenu_Click);
             // 
@@ -115,7 +116,7 @@
             // 
             this.SaveImageFileMenu.Enabled = false;
             this.SaveImageFileMenu.Name = "SaveImageFileMenu";
-            this.SaveImageFileMenu.Size = new System.Drawing.Size(180, 22);
+            this.SaveImageFileMenu.Size = new System.Drawing.Size(176, 22);
             this.SaveImageFileMenu.Text = "Save Filtered Image";
             this.SaveImageFileMenu.Click += new System.EventHandler(this.SaveImageFileMenu_Click);
             // 
@@ -128,6 +129,8 @@
             // 
             // customKernelToolStripMenuItem
             // 
+            this.customKernelToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem});
             this.customKernelToolStripMenuItem.Enabled = false;
             this.customKernelToolStripMenuItem.Name = "customKernelToolStripMenuItem";
             this.customKernelToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
@@ -144,9 +147,16 @@
             // copyToolStripMenuItem
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToolStripMenuItem.Text = "Add";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
             // 
             // ImageProcessorForm
             // 
@@ -184,6 +194,7 @@
         private System.Windows.Forms.ToolStripMenuItem customKernelToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
     }
 }
 

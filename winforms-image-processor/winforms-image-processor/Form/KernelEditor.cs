@@ -14,9 +14,11 @@ namespace winforms_image_processor
         }
 
         private ImageProcessorForm imageProcessorForm;
-        public KernelEditor(Form callingForm)
+        private string kernel;
+        public KernelEditor(Form callingForm, string filter)
         {
             imageProcessorForm = callingForm as ImageProcessorForm;
+            kernel = filter;
             InitializeComponent();
             SetUpKernelEditor();
         }
@@ -33,7 +35,8 @@ namespace winforms_image_processor
 
         public void SetUpKernelEditor()
         {
-            CustomKernel customKernel = Kernel.customKernel;
+            Console.WriteLine(kernel);
+            CustomKernel customKernel = Kernel.customKernels[kernel];
 
             CBFilterType.DataSource = filterTypes;
 
@@ -121,7 +124,7 @@ namespace winforms_image_processor
             if (value == 0)
                 NUDDivisor.Value = 1;
 
-            Kernel.customKernel = new CustomKernel(
+            Kernel.customKernels[this.kernel] = new CustomKernel(
                 kernel,
                 value,
                 (int)NUDOffset.Value,

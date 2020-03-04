@@ -28,17 +28,23 @@ namespace winforms_image_processor
             { "Emboss",                 (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.EmbossKernel) },
             { "Outline",                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.OutlineKernel) },
 
-            { "Custom Kernel",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.customKernel) },
+            //{ "Custom Kernel",          (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.customKernel) },
         };
+
+        public static void UpdateFilterMapping(string filter)
+        {
+            filterMapping.Add(
+                filter,
+                (bmp) => bmp.ApplyFilter(ApplyKernel, Kernel.customKernels[filter])
+                );
+        }
 
         public static Bitmap RecreateFilterStateFromState(Bitmap originalImage, List<string> state)
         {
             Debug.Print("Recreating filter state");
 
             foreach (string filter in state)
-            {
                 originalImage = filterMapping[filter](originalImage);
-            }
 
             return originalImage;
         }

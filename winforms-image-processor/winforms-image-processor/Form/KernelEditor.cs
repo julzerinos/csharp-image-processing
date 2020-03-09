@@ -100,7 +100,6 @@ namespace winforms_image_processor
                 }
             }
         }
-
         public void SetKernelFromEditor()
         {
             double[,] kernel = new double[tableLayoutPanel1.ColumnCount, tableLayoutPanel1.RowCount];
@@ -119,10 +118,9 @@ namespace winforms_image_processor
             {
                 foreach (double i in kernel)
                     value += (int)i;
-                NUDDivisor.Value = value;
             }
             if (value == 0)
-                NUDDivisor.Value = 1;
+                value = 1;
 
             Kernel.customKernels[this.kernel] = new CustomKernel(
                 kernel,

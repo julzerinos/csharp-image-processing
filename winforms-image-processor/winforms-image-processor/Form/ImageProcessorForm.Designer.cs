@@ -38,9 +38,10 @@
             this.SaveImageFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customKernelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFilterConstantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -89,7 +90,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenu,
             this.filtersToolStripMenuItem,
-            this.customKernelToolStripMenuItem});
+            this.customKernelToolStripMenuItem,
+            this.editFilterConstantsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(678, 24);
@@ -137,6 +139,13 @@
             this.customKernelToolStripMenuItem.Text = "Custom Kernel";
             this.customKernelToolStripMenuItem.Click += new System.EventHandler(this.customKernelToolStripMenuItem_Click);
             // 
+            // addToolStripMenuItem
+            // 
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToolStripMenuItem.Text = "Add";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -151,12 +160,12 @@
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
-            // addToolStripMenuItem
+            // editFilterConstantsToolStripMenuItem
             // 
-            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.addToolStripMenuItem.Text = "Add";
-            this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            this.editFilterConstantsToolStripMenuItem.Name = "editFilterConstantsToolStripMenuItem";
+            this.editFilterConstantsToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
+            this.editFilterConstantsToolStripMenuItem.Text = "Edit Filter Constants";
+            this.editFilterConstantsToolStripMenuItem.Click += new System.EventHandler(this.editFilterConstantsToolStripMenuItem_Click);
             // 
             // ImageProcessorForm
             // 
@@ -195,6 +204,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editFilterConstantsToolStripMenuItem;
     }
 }
 

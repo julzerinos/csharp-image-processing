@@ -17,17 +17,34 @@ namespace winforms_image_processor
         {
             InitializeComponent();
 
-            Console.WriteLine("test" + 1);
-
             foreach (var filter in FilterManager.filterMapping)
             {
                 ToolStripMenuItem subItem = new ToolStripMenuItem(filter.Key);
-                subItem.CheckedChanged += StateChange;
-                subItem.CheckOnClick = true;
+                ToolStripMenuItem subsubItem = new ToolStripMenuItem("Add layer");
+                subItem.DropDownItems.Add(subsubItem);
+                subsubItem.Click += AddMultipleLayer;
                 filtersToolStripMenuItem.DropDownItems.Add(subItem);
             }
 
             FltPictureBox.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        Dictionary<string, int> multipleFilterCount = new Dictionary<string, int>();
+
+        private void AddMultipleLayer(object sender, EventArgs e)
+        {
+            ToolStripMenuItem ts = sender as ToolStripMenuItem;
+            ToolStripMenuItem tsParent = ts.OwnerItem as ToolStripMenuItem;
+
+            if (!multipleFilterCount.ContainsKey(tsParent.Text))
+                multipleFilterCount.Add(tsParent.Text, 1);
+            else
+                multipleFilterCount[tsParent.Text] += 1;
+
+            ToolStripMenuItem tsLayer = new ToolStripMenuItem(tsParent.Text);
+            tsLayer.CheckedChanged += StateChange;
+            tsLayer.CheckOnClick = true;
+            tsParent.DropDownItems.Add(tsLayer);
         }
 
         private void StateChange(object sender, EventArgs e)
@@ -149,6 +166,17 @@ namespace winforms_image_processor
             FilterManager.UpdateFilterMapping(name);
 
             filtersToolStripMenuItem.DropDownItems.Add(ts);
+        }
+
+        private void editFilterConstantsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConstantsEditor constantsEditor = new ConstantsEditor();
+            if (constantsEditor.ShowDialog() == DialogResult.Cancel) return;
+
+            CacheManager.ResetCache((Bitmap)OrgPictureBox.Image);
+            UpdateCacheIfEmpty();
+
+            FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
         }
     }
 }

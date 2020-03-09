@@ -51,6 +51,12 @@
     <Compile Include="Filters\Constants.cs" />
     <Compile Include="Filters\FilterManager.cs" />
     <Compile Include="Filters\Kernel.cs" />
+    <Compile Include="Form\ConstantsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ConstantsEditor.Designer.cs">
+      <DependentUpon>ConstantsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\ImageProcessorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,6 +71,9 @@
     </Compile>
     <Compile Include="Form\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form\ConstantsEditor.resx">
+      <DependentUpon>ConstantsEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\ImageProcessorForm.resx">
       <DependentUpon>ImageProcessorForm.cs</DependentUpon>
     </EmbeddedResource>

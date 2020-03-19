@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace winforms_image_processor
@@ -111,7 +106,15 @@ namespace winforms_image_processor
             SaveImageFileMenu.Enabled = true;
             customKernelToolStripMenuItem.Enabled = true;
 
-            CacheManager.InitializeWithOriginal((Bitmap)FltPictureBox.Image);
+            if (CacheManager.cachedFilterStates != null)
+            {
+                CacheManager.ResetCache((Bitmap)OrgPictureBox.Image);
+                UpdateCacheIfEmpty();
+
+                FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+            }
+            else
+                CacheManager.InitializeWithOriginal((Bitmap)FltPictureBox.Image);
         }
 
         private void SaveImageFileMenu_Click(object sender, EventArgs e)
@@ -205,6 +208,25 @@ namespace winforms_image_processor
 
             OrgPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
             FltPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+        }
+
+        private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CacheManager.filterState = new List<string>();
+            FltPictureBox.Image = CacheManager.GetOriginalImage();
+            UncheckToolsRecursion(filtersToolStripMenuItem);
+        }
+
+        private void UncheckToolsRecursion(ToolStripMenuItem tsmi)
+        //Recursion for toolstrip: https://stackoverflow.com/questions/33766276/cannot-get-all-the-submenu-items-in-winform-in-c-sharp
+        {
+            if (tsmi.Checked)
+                tsmi.Checked = false;
+
+            foreach (ToolStripMenuItem innerTsmi in tsmi.DropDownItems)
+            {
+                UncheckToolsRecursion(innerTsmi);
+            }
         }
     }
 }

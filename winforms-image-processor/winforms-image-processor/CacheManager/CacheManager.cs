@@ -18,7 +18,7 @@ namespace winforms_image_processor
     static class CacheManager
     {
         public static List<string> filterState;
-        public static Dictionary<List<string>, Bitmap> cachedFilterStates;
+        public static Dictionary<List<string>, Bitmap> cachedFilterStates = null;
 
         public static void InitializeWithOriginal(Bitmap bmp)
         {

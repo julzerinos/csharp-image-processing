@@ -51,6 +51,7 @@
     <Compile Include="Filters\Constants.cs" />
     <Compile Include="Filters\FilterManager.cs" />
     <Compile Include="Filters\Kernel.cs" />
+    <Compile Include="Filters\OctreeTools.cs" />
     <Compile Include="Form\ConstantsEditor.cs">
       <SubType>Form</SubType>
     </Compile>

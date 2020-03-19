@@ -17,11 +17,17 @@ namespace winforms_image_processor
             InitializeComponent();
 
             numericUpDown1.Value = (decimal)Constants.filterGammaValue;
+            numericUpDown2.Value = (decimal)Constants.filterBrightnessValue;
+            numericUpDown3.Value = (decimal)Constants.filterContrastValue;
+            numericUpDown4.Value = Constants.filterOctreeColorLimit;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Constants.filterGammaValue = (double)numericUpDown1.Value;
+            Constants.filterBrightnessValue = (double)numericUpDown2.Value;
+            Constants.filterContrastValue = (double)numericUpDown3.Value;
+            Constants.filterOctreeColorLimit = (int)numericUpDown4.Value;
 
             DialogResult = DialogResult.OK;
             Close();

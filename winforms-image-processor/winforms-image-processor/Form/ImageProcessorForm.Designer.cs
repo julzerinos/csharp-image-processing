@@ -36,12 +36,16 @@
             this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenImageFileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveImageFileMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imageFitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.originalSizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filtersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customKernelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFilterConstantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editFilterConstantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -51,17 +55,17 @@
             // 
             // TableControl
             // 
-            this.TableControl.ColumnCount = 1;
-            this.TableControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.TableControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.TableControl.Controls.Add(this.OrgPictureBox, 1, 0);
-            this.TableControl.Controls.Add(this.FltPictureBox, 1, 1);
+            this.TableControl.AutoSize = true;
+            this.TableControl.ColumnCount = 2;
+            this.TableControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TableControl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TableControl.Controls.Add(this.OrgPictureBox, 0, 0);
+            this.TableControl.Controls.Add(this.FltPictureBox, 1, 0);
             this.TableControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TableControl.Location = new System.Drawing.Point(0, 24);
             this.TableControl.Name = "TableControl";
-            this.TableControl.RowCount = 2;
-            this.TableControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.TableControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.TableControl.RowCount = 1;
+            this.TableControl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.TableControl.Size = new System.Drawing.Size(678, 437);
             this.TableControl.TabIndex = 0;
             // 
@@ -70,18 +74,18 @@
             this.OrgPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OrgPictureBox.Location = new System.Drawing.Point(3, 3);
             this.OrgPictureBox.Name = "OrgPictureBox";
-            this.OrgPictureBox.Size = new System.Drawing.Size(672, 212);
-            this.OrgPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.OrgPictureBox.Size = new System.Drawing.Size(333, 431);
+            this.OrgPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.OrgPictureBox.TabIndex = 0;
             this.OrgPictureBox.TabStop = false;
             // 
             // FltPictureBox
             // 
             this.FltPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FltPictureBox.Location = new System.Drawing.Point(3, 221);
+            this.FltPictureBox.Location = new System.Drawing.Point(342, 3);
             this.FltPictureBox.Name = "FltPictureBox";
-            this.FltPictureBox.Size = new System.Drawing.Size(672, 213);
-            this.FltPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.FltPictureBox.Size = new System.Drawing.Size(333, 431);
+            this.FltPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.FltPictureBox.TabIndex = 1;
             this.FltPictureBox.TabStop = false;
             // 
@@ -89,6 +93,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileMenu,
+            this.viewToolStripMenuItem,
             this.filtersToolStripMenuItem,
             this.customKernelToolStripMenuItem,
             this.editFilterConstantsToolStripMenuItem});
@@ -122,6 +127,38 @@
             this.SaveImageFileMenu.Text = "Save Filtered Image";
             this.SaveImageFileMenu.Click += new System.EventHandler(this.SaveImageFileMenu_Click);
             // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.imageFitToolStripMenuItem});
+            this.viewToolStripMenuItem.Enabled = false;
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // imageFitToolStripMenuItem
+            // 
+            this.imageFitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fitToolStripMenuItem,
+            this.originalSizeToolStripMenuItem});
+            this.imageFitToolStripMenuItem.Name = "imageFitToolStripMenuItem";
+            this.imageFitToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.imageFitToolStripMenuItem.Text = "Image View Mode";
+            // 
+            // fitToolStripMenuItem
+            // 
+            this.fitToolStripMenuItem.Name = "fitToolStripMenuItem";
+            this.fitToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.fitToolStripMenuItem.Text = "Fit";
+            this.fitToolStripMenuItem.Click += new System.EventHandler(this.fitToolStripMenuItem_Click);
+            // 
+            // originalSizeToolStripMenuItem
+            // 
+            this.originalSizeToolStripMenuItem.Name = "originalSizeToolStripMenuItem";
+            this.originalSizeToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.originalSizeToolStripMenuItem.Text = "Original Size";
+            this.originalSizeToolStripMenuItem.Click += new System.EventHandler(this.originalSizeToolStripMenuItem_Click);
+            // 
             // filtersToolStripMenuItem
             // 
             this.filtersToolStripMenuItem.Enabled = false;
@@ -142,9 +179,16 @@
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(96, 22);
             this.addToolStripMenuItem.Text = "Add";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            // 
+            // editFilterConstantsToolStripMenuItem
+            // 
+            this.editFilterConstantsToolStripMenuItem.Name = "editFilterConstantsToolStripMenuItem";
+            this.editFilterConstantsToolStripMenuItem.Size = new System.Drawing.Size(90, 20);
+            this.editFilterConstantsToolStripMenuItem.Text = "Filter Options";
+            this.editFilterConstantsToolStripMenuItem.Click += new System.EventHandler(this.editFilterConstantsToolStripMenuItem_Click);
             // 
             // contextMenuStrip1
             // 
@@ -160,26 +204,21 @@
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
-            // editFilterConstantsToolStripMenuItem
-            // 
-            this.editFilterConstantsToolStripMenuItem.Name = "editFilterConstantsToolStripMenuItem";
-            this.editFilterConstantsToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
-            this.editFilterConstantsToolStripMenuItem.Text = "Edit Filter Constants";
-            this.editFilterConstantsToolStripMenuItem.Click += new System.EventHandler(this.editFilterConstantsToolStripMenuItem_Click);
-            // 
             // ImageProcessorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(678, 461);
             this.Controls.Add(this.TableControl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximumSize = new System.Drawing.Size(1000, 1000);
-            this.MinimumSize = new System.Drawing.Size(500, 500);
+            this.MaximumSize = new System.Drawing.Size(100000, 100000);
+            this.MinimumSize = new System.Drawing.Size(16, 39);
             this.Name = "ImageProcessorForm";
             this.Text = "Image Processor";
             this.TableControl.ResumeLayout(false);
+            this.TableControl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).EndInit();
             this.menuStrip1.ResumeLayout(false);
@@ -205,6 +244,10 @@
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editFilterConstantsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem imageFitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem originalSizeToolStripMenuItem;
     }
 }
 

@@ -23,10 +23,21 @@ namespace winforms_image_processor
                 ToolStripMenuItem subsubItem = new ToolStripMenuItem("Add layer");
                 subItem.DropDownItems.Add(subsubItem);
                 subsubItem.Click += AddMultipleLayer;
+
+                subItem.DropDown.Closing += new ToolStripDropDownClosingEventHandler(dropDownClosing);
+
                 filtersToolStripMenuItem.DropDownItems.Add(subItem);
             }
 
             FltPictureBox.ContextMenuStrip = contextMenuStrip1;
+        }
+
+        private void dropDownClosing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+            {
+                e.Cancel = true;
+            }
         }
 
         Dictionary<string, int> multipleFilterCount = new Dictionary<string, int>();
@@ -95,6 +106,7 @@ namespace winforms_image_processor
             OrgPictureBox.Image = new Bitmap(filePath);
             FltPictureBox.Image = new Bitmap(filePath);
 
+            viewToolStripMenuItem.Enabled = true;
             filtersToolStripMenuItem.Enabled = true;
             SaveImageFileMenu.Enabled = true;
             customKernelToolStripMenuItem.Enabled = true;
@@ -177,6 +189,22 @@ namespace winforms_image_processor
             UpdateCacheIfEmpty();
 
             FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+        }
+
+        private void fitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OrgPictureBox.SizeMode == PictureBoxSizeMode.Zoom) return;
+
+            OrgPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+            FltPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        private void originalSizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (OrgPictureBox.SizeMode == PictureBoxSizeMode.AutoSize) return;
+
+            OrgPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
+            FltPictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
         }
     }
 }

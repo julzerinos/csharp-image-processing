@@ -17,7 +17,7 @@ namespace winforms_image_processor
             int height = bmp.Height;
             BitmapData srcData = bmp.LockBits(
                 new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
                 );
 
             stride = srcData.Stride;
@@ -36,7 +36,7 @@ namespace winforms_image_processor
             int height = bmp.Height;
             BitmapData srcData = bmp.LockBits(
                 new Rectangle(0, 0, width, height),
-                ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
                 );
 
             int bytes = srcData.Stride * srcData.Height;
@@ -52,7 +52,7 @@ namespace winforms_image_processor
         {
             BitmapData resData = bmp.LockBits(
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb
+                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb
                 );
 
             Marshal.Copy(bytes, 0, resData.Scan0, bytes.Length);

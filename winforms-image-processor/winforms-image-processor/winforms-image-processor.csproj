@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CacheManager\CacheManager.cs" />
     <Compile Include="Filters\BitmapExtension.cs" />
+    <Compile Include="Filters\ColorspaceTools.cs" />
     <Compile Include="Filters\Constants.cs" />
     <Compile Include="Filters\FilterManager.cs" />
     <Compile Include="Filters\Kernel.cs" />
@@ -71,6 +72,12 @@
       <DependentUpon>KernelEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\Program.cs" />
+    <Compile Include="Form\YBRColorspaceDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\YBRColorspaceDisplay.Designer.cs">
+      <DependentUpon>YBRColorspaceDisplay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form\ConstantsEditor.resx">
       <DependentUpon>ConstantsEditor.cs</DependentUpon>
@@ -80,6 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\KernelEditor.resx">
       <DependentUpon>KernelEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\YBRColorspaceDisplay.resx">
+      <DependentUpon>YBRColorspaceDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

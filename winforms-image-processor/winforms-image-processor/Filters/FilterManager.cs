@@ -271,5 +271,57 @@ namespace winforms_image_processor
             return result;
         }
 
+        ///////////////////////////////
+        // YCbCr Colorspace Filters //
+        /////////////////////////////
+
+        static public byte[] YGrayscale(byte[] buffer)
+        {
+            byte[] result = new byte[buffer.Length];
+
+            for (int i = 0; i < buffer.Length; i += 4)
+            {
+                ColorspaceTools.RGBtoYBR(buffer[i + 2], buffer[i + 1], buffer[i], out int Y, out _, out _);
+
+                result[i + 0] = result[i + 1] = result[i + 2] = (byte)Y;
+                result[i + 3] = 255;
+            }
+
+            return result;
+        }
+
+        static public byte[] CbInterpolate(byte[] buffer)
+        {
+            byte[] result = new byte[buffer.Length];
+
+            for (int i = 0; i < buffer.Length; i += 4)
+            {
+                ColorspaceTools.RGBtoYBR(buffer[i + 2], buffer[i + 1], buffer[i], out int Y, out int Cb, out int Cr);
+
+                result[i] = (byte)((1 - Cb) * 0 + Cb * 255);
+                result[i + 1] = (byte) ((1 - Cb) * 255 + Cb * 0);
+                result[i + 2] = (byte) ((1 - Cb) * 127 + Cb * 127);
+                result[i + 3] = 255;
+            }
+
+            return result;
+        }
+
+        static public byte[] CrInterpolate(byte[] buffer)
+        {
+            byte[] result = new byte[buffer.Length];
+
+            for (int i = 0; i < buffer.Length; i += 4)
+            {
+                ColorspaceTools.RGBtoYBR(buffer[i + 2], buffer[i + 1], buffer[i], out int Y, out int Cb, out int Cr);
+
+                result[i] = (byte)((1 - Cr) * 127 + Cr * 127);
+                result[i + 1] = (byte)((1 - Cr) * 255 + Cr * 0);
+                result[i + 2] = (byte)((1 - Cr) * 0 + Cr * 255);
+                result[i + 3] = 255;
+            }
+
+            return result;
+        }
     }
 }

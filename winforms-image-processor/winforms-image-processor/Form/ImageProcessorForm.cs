@@ -66,6 +66,8 @@ namespace winforms_image_processor
             UpdateCacheIfEmpty();
 
             FltPictureBox.Image = CacheManager.GetBitmapForFilterState();
+
+            yBRColorspaceDisplay.updateImages((Bitmap)FltPictureBox.Image);
         }
 
         public void UpdateCacheIfEmpty()
@@ -105,6 +107,7 @@ namespace winforms_image_processor
             filtersToolStripMenuItem.Enabled = true;
             SaveImageFileMenu.Enabled = true;
             customKernelToolStripMenuItem.Enabled = true;
+            yBRSplitToolStripMenuItem.Enabled = true;
 
             if (CacheManager.cachedFilterStates != null)
             {
@@ -227,6 +230,15 @@ namespace winforms_image_processor
             {
                 UncheckToolsRecursion(innerTsmi);
             }
+        }
+
+        public YBRColorspaceDisplay yBRColorspaceDisplay;
+
+        private void yBRSplitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            yBRColorspaceDisplay = new YBRColorspaceDisplay(this, (Bitmap)FltPictureBox.Image);
+
+            yBRColorspaceDisplay.Show();
         }
     }
 }

@@ -54,7 +54,7 @@ namespace winforms_image_processor
 
         public static Bitmap GetOriginalImage() => cachedFilterStates[new List<string>()];
 
-        private static T DeepCopy<T>(T source)
+        public static T DeepCopy<T>(T source)
         // Sources used
         // Deepcopy w/ stream:      https://stackoverflow.com/questions/43039099/creating-a-completely-new-copy-of-bitmap-from-a-bitmap-in-c-sharp/43042865#43042865
         {

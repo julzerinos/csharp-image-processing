@@ -48,6 +48,8 @@
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawingToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -83,13 +85,13 @@
             // 
             // FltPictureBox
             // 
-            this.FltPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FltPictureBox.Location = new System.Drawing.Point(342, 3);
             this.FltPictureBox.Name = "FltPictureBox";
             this.FltPictureBox.Size = new System.Drawing.Size(333, 431);
             this.FltPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.FltPictureBox.TabIndex = 1;
             this.FltPictureBox.TabStop = false;
+            this.FltPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.FltPictureBox_MouseClick);
             // 
             // menuStrip1
             // 
@@ -100,6 +102,7 @@
             this.customKernelToolStripMenuItem,
             this.editFilterConstantsToolStripMenuItem,
             this.yBRSplitToolStripMenuItem,
+            this.drawingToolsToolStripMenuItem,
             this.resetToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -223,6 +226,21 @@
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
+            // drawingToolsToolStripMenuItem
+            // 
+            this.drawingToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.drawLineToolStripMenuItem});
+            this.drawingToolsToolStripMenuItem.Name = "drawingToolsToolStripMenuItem";
+            this.drawingToolsToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
+            this.drawingToolsToolStripMenuItem.Text = "Drawing tools";
+            // 
+            // drawLineToolStripMenuItem
+            // 
+            this.drawLineToolStripMenuItem.Name = "drawLineToolStripMenuItem";
+            this.drawLineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.drawLineToolStripMenuItem.Text = "Draw line";
+            this.drawLineToolStripMenuItem.Click += new System.EventHandler(this.drawLineToolStripMenuItem_Click);
+            // 
             // ImageProcessorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,6 +287,8 @@
         private System.Windows.Forms.ToolStripMenuItem originalSizeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem yBRSplitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawingToolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawLineToolStripMenuItem;
     }
 }
 

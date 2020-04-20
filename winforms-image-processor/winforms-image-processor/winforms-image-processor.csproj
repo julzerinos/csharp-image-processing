@@ -45,51 +45,63 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager\CacheManager.cs" />
+    <Compile Include="DrawTools\MidPointLine.cs" />
+    <Compile Include="DrawTools\Shape.cs" />
     <Compile Include="Filters\BitmapExtension.cs" />
     <Compile Include="Filters\ColorspaceTools.cs" />
     <Compile Include="Filters\Constants.cs" />
     <Compile Include="Filters\FilterManager.cs" />
     <Compile Include="Filters\Kernel.cs" />
     <Compile Include="Filters\OctreeTools.cs" />
-    <Compile Include="Form\ConstantsEditor.cs">
+    <Compile Include="Forms\ConstantsEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ConstantsEditor.Designer.cs">
+    <Compile Include="Forms\ConstantsEditor.Designer.cs">
       <DependentUpon>ConstantsEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ImageProcessorForm.cs">
+    <Compile Include="Forms\DrawForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ImageProcessorForm.Designer.cs">
+    <Compile Include="Forms\DrawForm.Designer.cs">
+      <DependentUpon>DrawForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImageProcessorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImageProcessorForm.Designer.cs">
       <DependentUpon>ImageProcessorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\KernelEditor.cs">
+    <Compile Include="Forms\KernelEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\KernelEditor.Designer.cs">
+    <Compile Include="Forms\KernelEditor.Designer.cs">
       <DependentUpon>KernelEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\Program.cs" />
-    <Compile Include="Form\YBRColorspaceDisplay.cs">
+    <Compile Include="Forms\Program.cs" />
+    <Compile Include="Forms\YBRColorspaceDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\YBRColorspaceDisplay.Designer.cs">
+    <Compile Include="Forms\YBRColorspaceDisplay.Designer.cs">
       <DependentUpon>YBRColorspaceDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form\ConstantsEditor.resx">
+    <EmbeddedResource Include="Forms\ConstantsEditor.resx">
       <DependentUpon>ConstantsEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ImageProcessorForm.resx">
+    <EmbeddedResource Include="Forms\DrawForm.resx">
+      <DependentUpon>DrawForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImageProcessorForm.resx">
       <DependentUpon>ImageProcessorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\KernelEditor.resx">
+    <EmbeddedResource Include="Forms\KernelEditor.resx">
       <DependentUpon>KernelEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\YBRColorspaceDisplay.resx">
+    <EmbeddedResource Include="Forms\YBRColorspaceDisplay.resx">
       <DependentUpon>YBRColorspaceDisplay.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -112,7 +124,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Form\App.config" />
+    <None Include="Forms\App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

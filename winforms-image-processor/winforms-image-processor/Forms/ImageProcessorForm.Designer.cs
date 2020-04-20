@@ -45,11 +45,10 @@
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editFilterConstantsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.yBRSplitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawingToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawingToolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TableControl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OrgPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FltPictureBox)).BeginInit();
@@ -91,7 +90,6 @@
             this.FltPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.FltPictureBox.TabIndex = 1;
             this.FltPictureBox.TabStop = false;
-            this.FltPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.FltPictureBox_MouseClick);
             // 
             // menuStrip1
             // 
@@ -205,6 +203,13 @@
             this.yBRSplitToolStripMenuItem.Text = "YBR Split";
             this.yBRSplitToolStripMenuItem.Click += new System.EventHandler(this.yBRSplitToolStripMenuItem_Click);
             // 
+            // drawingToolsToolStripMenuItem
+            // 
+            this.drawingToolsToolStripMenuItem.Name = "drawingToolsToolStripMenuItem";
+            this.drawingToolsToolStripMenuItem.Size = new System.Drawing.Size(108, 20);
+            this.drawingToolsToolStripMenuItem.Text = "Drawing window";
+            this.drawingToolsToolStripMenuItem.Click += new System.EventHandler(this.drawingToolsToolStripMenuItem_Click);
+            // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
@@ -225,21 +230,6 @@
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
-            // 
-            // drawingToolsToolStripMenuItem
-            // 
-            this.drawingToolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.drawLineToolStripMenuItem});
-            this.drawingToolsToolStripMenuItem.Name = "drawingToolsToolStripMenuItem";
-            this.drawingToolsToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
-            this.drawingToolsToolStripMenuItem.Text = "Drawing tools";
-            // 
-            // drawLineToolStripMenuItem
-            // 
-            this.drawLineToolStripMenuItem.Name = "drawLineToolStripMenuItem";
-            this.drawLineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.drawLineToolStripMenuItem.Text = "Draw line";
-            this.drawLineToolStripMenuItem.Click += new System.EventHandler(this.drawLineToolStripMenuItem_Click);
             // 
             // ImageProcessorForm
             // 
@@ -288,7 +278,6 @@
         private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem yBRSplitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawingToolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem drawLineToolStripMenuItem;
     }
 }
 

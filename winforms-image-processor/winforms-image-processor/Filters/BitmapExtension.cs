@@ -14,8 +14,7 @@ namespace winforms_image_processor
         public static void SetPixelFast(this Image img, int x, int y, int[] newValues)
         {
             Bitmap bmp = (Bitmap)img;
-            img.SetPixelFast(x, y, newValues);
-            img = bmp;
+            bmp.SetPixelFast(x, y, newValues);
         }
     }
 

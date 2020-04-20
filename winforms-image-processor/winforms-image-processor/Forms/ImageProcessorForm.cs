@@ -242,18 +242,10 @@ namespace winforms_image_processor
             yBRColorspaceDisplay.Show();
         }
 
-        private void drawLineToolStripMenuItem_Click(object sender, EventArgs e)
+        private void drawingToolsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void FltPictureBox_MouseClick(object sender, MouseEventArgs e)
-        {            
-            Console.WriteLine(e.Location);
-            Bitmap bmp = (Bitmap)FltPictureBox.Image;
-            if (e.X < bmp.Width && e.Y < bmp.Height)
-                bmp.SetPixelFast(e.X, e.Y, new int[] { 0, 0, 0, 0 });
-            FltPictureBox.Image = bmp;
+            DrawForm draw= new DrawForm();
+            draw.ShowDialog();
         }
     }
 }

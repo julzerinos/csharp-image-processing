@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager\CacheManager.cs" />
+    <Compile Include="DrawTools\AntiAliasTools.cs" />
+    <Compile Include="DrawTools\MidPointCircle.cs" />
     <Compile Include="DrawTools\MidPointLine.cs" />
     <Compile Include="DrawTools\Shape.cs" />
     <Compile Include="Filters\BitmapExtension.cs" />
@@ -89,6 +91,7 @@
       <DependentUpon>YBRColorspaceDisplay.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveTools\ShapeSerializer.cs" />
     <EmbeddedResource Include="Forms\ConstantsEditor.resx">
       <DependentUpon>ConstantsEditor.cs</DependentUpon>
     </EmbeddedResource>

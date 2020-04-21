@@ -9,29 +9,23 @@ using System.Threading.Tasks;
 
 namespace winforms_image_processor
 {
-    public static class IamgeExtensions
-    {
-        public static void SetPixelFast(this Image img, int x, int y, int[] newValues)
-        {
-            Bitmap bmp = (Bitmap)img;
-            bmp.SetPixelFast(x, y, newValues);
-        }
-    }
-
     public static class BitmapExtension
     {
-        public static void SetPixelFast(this Bitmap bmp, int x, int y, int[] newValues)
+        public static void SetPixelFast(this Bitmap bmp, int x, int y, Color color)
         {
+            var newValues = new byte[] { color.B, color.G, color.R, 255 };
+
             BitmapData data = bmp.LockBits(
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb
                 );
+
             unsafe
             {
                 byte* ptr = (byte*)data.Scan0;
 
                 for (int i = 0; i < 4; i++)
-                    ptr[data.Stride * y + 4 * x + i] = (byte)newValues[i];
+                    ptr[data.Stride * y + 4 * x + i] = newValues[i];
             }
             bmp.UnlockBits(data);
         }
@@ -103,7 +97,7 @@ namespace winforms_image_processor
 
             Bitmap bmpRes = new Bitmap(bmp.Width, bmp.Height);
             bmpRes.SetBitmapDataBytes(result);
-            
+
             return bmpRes;
         }
     }

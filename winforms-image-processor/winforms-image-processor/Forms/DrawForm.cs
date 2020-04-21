@@ -11,101 +11,183 @@ using System.Windows.Forms;
 
 namespace winforms_image_processor
 {
+    public enum DrawingShape { EMPTY, LINE, CIRCLE };
+
     public partial class DrawForm : Form
     {
+
         public DrawForm()
         {
             InitializeComponent();
+
+            listBox1.DataSource = shapes;
         }
 
-        List<Shape> shapes = new List<Shape>();
+        BindingList<Shape> shapes = new BindingList<Shape>();
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            shapes.Clear();
 
-            using (Graphics grp = Graphics.FromImage(bmp))
-            {
-                grp.FillRectangle(new SolidBrush(Color.White), 0, 0, pictureBox1.Width, pictureBox1.Height);
-            }
-
-            pictureBox1.Image = bmp;
+            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             toolsToolStripMenuItem.Enabled = true;
         }
 
-        void UpdateLabel(int obj)
+        private void DrawForm_ResizeEnd(object sender, EventArgs e)
         {
-            switch (obj)
+            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            RefreshShapes();
+        }
+
+        void UpdateLabel()
+        {
+            switch (currentDrawingShape)
             {
-                case 1:
+                case DrawingShape.LINE:
                     label1.Text = "Currently drawing: line";
                     break;
-                case 2:
+                case DrawingShape.CIRCLE:
                     label1.Text = "Currently drawing: circle";
                     break;
-                case 0:
+                case DrawingShape.EMPTY:
                 default:
                     label1.Text = "";
                     break;
             }
         }
 
-        void RefreshShapes()
+        void RefreshShapes(int index = 0)
         {
-            Bitmap bmp = (Bitmap)pictureBox1.Image;
-            foreach (var shape in shapes)
+            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            for (int i = index; i < shapes.Count; i++)
             {
-                foreach (var point in shape.GetPixels())
+                foreach (var point in shapes[i].GetPixels())
                 {
-                    Console.WriteLine(point.ToString());
-                    bmp.SetPixelFast(point.X, point.Y, new int[] { 100, 100, 100, 255 });
+                    if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
+                        continue;
+
+                    bmp.SetPixelFast(point.X, point.Y, shapes[i].shapeColor);
                 }
             }
             pictureBox1.Image = bmp;
         }
 
-        Shape currentShape = null;
-        bool drawingLine = false;
 
-        void drawLineMode(bool status)
+        Shape currentShape = null;
+        DrawingShape currentDrawingShape = DrawingShape.EMPTY;
+        bool drawing;
+        int index;
+
+        void drawMode(
+            bool status,
+            Shape shape = null,
+            int modify_index = -1
+            )
         {
-            if (!status)
+            if (!status && index == -1)
             {
                 shapes.Add(currentShape);
-                Console.WriteLine("add");
+                RefreshShapes();
+            }
+            else if (!status)
+            {
+                shapes[index] = currentShape;
+                RefreshShapes(index);
             }
 
-            drawingLine = status;
-            currentShape = status ? new MidPointLine() : null;
-            UpdateLabel(status ? 1 : 0);
-        }
+            splitContainer2.Panel1.Enabled = !status;
 
-        private void midpointLineToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            drawLineMode(true);
+            index = modify_index;
+            drawing = status;
+            currentDrawingShape = shape == null ? DrawingShape.EMPTY : shape.shapeType;
+            currentShape = shape;
+            UpdateLabel();
         }
 
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
-            if (drawingLine)
+            if (drawing)
             {
                 if (1 == currentShape.AddPoint(e.Location))
-                    drawLineMode(false);
+                    drawMode(false);
             }
+        }
+
+        private void midpointCircleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new MidPointCircle(colorDialog1.Color));
+        }
+
+        private void midpointLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                button1.BackColor = colorDialog1.Color;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (shapes[listBox1.SelectedIndex].shapeType == DrawingShape.CIRCLE)
+                drawMode(true, new MidPointCircle(colorDialog1.Color), listBox1.SelectedIndex);
+            else
+                drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            shapes.RemoveAt(listBox1.SelectedIndex);
 
             RefreshShapes();
         }
 
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+
+            saveFileDialog1.InitialDirectory = "c:\\Downloads";
+            saveFileDialog1.Filter = "Vector shapes (*.cg2020)|*.cg2020";
+            saveFileDialog1.DefaultExt = "dat";
+            saveFileDialog1.AddExtension = true;
+            saveFileDialog1.Title = "Save the filtered image";
+            saveFileDialog1.ShowDialog();
+
+            if (saveFileDialog1.FileName != "")
+            {
+                ShapeSerializer.Save(saveFileDialog1.FileName, shapes);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image == null)
+                pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
 
-        //private void FltPictureBox_MouseClick(object sender, MouseEventArgs e)
-        //{
-        //    Console.WriteLine(e.Location);
-        //    Bitmap bmp = (Bitmap)FltPictureBox.Image;
-        //    if (e.X < bmp.Width && e.Y < bmp.Height)
-        //        bmp.SetPixelFast(e.X, e.Y, new int[] { 0, 0, 0, 0 });
-        //    FltPictureBox.Image = bmp;
-        //}
+            var filePath = string.Empty;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\Downloads";
+                openFileDialog.Filter = "Vector shapes (*.cg2020)|*.cg2020";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    shapes = ShapeSerializer.Load<Shape>(openFileDialog.FileName);
+                }
+                else
+                    return;
+            }
+
+            RefreshShapes();
+        }
     }
 }

@@ -7,16 +7,24 @@ using System.Threading.Tasks;
 
 namespace winforms_image_processor
 {
+    [Serializable]
     class MidPointLine : Shape
     {
         public Point? startPoint = null;
         public Point? endPoint = null;
+        public int thickness;
 
-        /// <summary>
-        /// Adds either start or end point to a line
-        /// </summary>
-        /// <param name="point"></param>
-        /// <returns>return 0 when adding start point, 1 when end point</returns>
+        public MidPointLine(Color color, int thicc) : base(color)
+        {
+            thickness = thicc - 1;
+            shapeType = DrawingShape.LINE;
+        }
+
+        public override string ToString()
+        {
+            return "Line";
+        }
+
         public override int AddPoint(Point point)
         {
             if (startPoint == null)
@@ -29,39 +37,63 @@ namespace winforms_image_processor
             return 0;
         }
 
-        /// <summary>
-        /// Calculates pixels for midpoint line.
-        /// source: https://www.geeksforgeeks.org/mid-point-line-generation-algorithm/
-        /// </summary>
-        /// <returns>List of points for midpoint line</returns>
         public override List<Point> GetPixels()
         {
-            if (!endPoint.HasValue || !startPoint.HasValue)
-                throw new MissingMemberException();
+            return BresenhamMidPointAlgorithm((Point)startPoint, (Point)endPoint);
+        }
 
-            var points = new List<Point>();
+        public List<Point> BresenhamMidPointAlgorithm(Point start, Point end)
+        // https://stackoverflow.com/questions/11678693/all-cases-covered-bresenhams-line-algorithm
+        {
+            List<Point> points = new List<Point>();
 
-            int dx = endPoint.Value.X - startPoint.Value.X;
-            int dy = endPoint.Value.Y - startPoint.Value.Y;
+            int x = start.X, y = start.Y;
+            int x2 = end.X, y2 = end.Y;
 
-            int d = dy - (dx / 2);
-            int x = startPoint.Value.X, y = startPoint.Value.Y;
-
-            points.Add(new Point(x, y));
-
-            while (x < endPoint.Value.X)
+            int w = x2 - x;
+            int h = y2 - y;
+            int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+            if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+            if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+            if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+            int longest = Math.Abs(w);
+            int shortest = Math.Abs(h);
+            if (!(longest > shortest))
             {
-                x++;
+                longest = Math.Abs(h);
+                shortest = Math.Abs(w);
+                if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+                dx2 = 0;
+            }
+            int numerator = longest >> 1;
+            for (int i = 0; i <= longest; i++)
+            {
+                points.Add(new Point(x, y));
+                if (Math.Abs(h) > Math.Abs(w))
+                    for (int j = 1; j < thickness; j++)
+                    {
+                        points.Add(new Point(x - j, y));
+                        points.Add(new Point(x + j, y));
+                    }
+                else if (Math.Abs(w) > Math.Abs(h))
+                    for (int j = 1; j < thickness; j++)
+                    {
+                        points.Add(new Point(x, y - j));
+                        points.Add(new Point(x, y + j));
+                    }
 
-                if (d < 0)
-                    d += dy;
+                numerator += shortest;
+                if (!(numerator < longest))
+                {
+                    numerator -= longest;
+                    x += dx1;
+                    y += dy1;
+                }
                 else
                 {
-                    d += (dy - dx);
-                    y++;
+                    x += dx2;
+                    y += dy2;
                 }
-
-                points.Add(new Point(x, y));
             }
 
             return points;

@@ -57,17 +57,17 @@ namespace winforms_image_processor
             }
         }
 
-        void RefreshShapes(int index = 0)
+        void RefreshShapes()
         {
             Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            for (int i = index; i < shapes.Count; i++)
+            foreach (var shape in shapes)
             {
-                foreach (var point in shapes[i].GetPixels())
+                foreach (var point in shape.GetPixels())
                 {
                     if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
                         continue;
 
-                    bmp.SetPixelFast(point.X, point.Y, shapes[i].shapeColor);
+                    bmp.SetPixelFast(point.X, point.Y, shape.shapeColor);
                 }
             }
             pictureBox1.Image = bmp;
@@ -93,7 +93,7 @@ namespace winforms_image_processor
             else if (!status)
             {
                 shapes[index] = currentShape;
-                RefreshShapes(index);
+                RefreshShapes();
             }
 
             splitContainer2.Panel1.Enabled = !status;
@@ -134,6 +134,9 @@ namespace winforms_image_processor
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (shapes.Count == 0)
+                return;
+
             if (shapes[listBox1.SelectedIndex].shapeType == DrawingShape.CIRCLE)
                 drawMode(true, new MidPointCircle(colorDialog1.Color), listBox1.SelectedIndex);
             else
@@ -142,6 +145,9 @@ namespace winforms_image_processor
 
         private void button3_Click(object sender, EventArgs e)
         {
+            if (shapes.Count == 0)
+                return;
+
             shapes.RemoveAt(listBox1.SelectedIndex);
 
             RefreshShapes();

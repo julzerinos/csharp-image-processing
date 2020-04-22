@@ -14,9 +14,7 @@ namespace winforms_image_processor
         public Color shapeColor;
 
         public Shape(Color color)
-        {
-            shapeColor = color;
-        }
+        { shapeColor = color; }
 
         public abstract override string ToString();
 

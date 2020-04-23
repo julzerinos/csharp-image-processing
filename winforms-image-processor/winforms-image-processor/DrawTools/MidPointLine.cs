@@ -42,7 +42,12 @@ namespace winforms_image_processor
             return BresenhamMidPointAlgorithm((Point)startPoint, (Point)endPoint);
         }
 
-        public List<Point> BresenhamMidPointAlgorithm(Point start, Point end)
+        public override List<ValueTuple<Point, Color>> GetPixelsAA(byte[] buffer, int stride)
+        {
+            return GuptaSproullAlgorithm(startPoint.Value, endPoint.Value, new KeyValuePair<byte[], int>(buffer, stride));
+        }
+
+        List<Point> BresenhamMidPointAlgorithm(Point start, Point end)
         // https://stackoverflow.com/questions/11678693/all-cases-covered-bresenhams-line-algorithm
         {
             List<Point> points = new List<Point>();
@@ -98,5 +103,126 @@ namespace winforms_image_processor
 
             return points;
         }
+
+
+        List<ValueTuple<Point, Color>> GuptaSproullAlgorithm(Point start, Point end, KeyValuePair<byte[], int> buffer)
+        // try:
+        // http://elynxsdk.free.fr/ext-docs/Rasterization/Antialiasing/Gupta%20sproull%20antialiased%20lines.htm
+        // todo: change dict to other structure
+        {
+            var cpDict = new List<ValueTuple<Point, Color>>();
+
+            int x1 = start.X, y1 = start.Y;
+            int x2 = end.X, y2 = end.Y;
+
+            int dx = x2 - x1;
+            int dy = y2 - y1;
+
+            int du, dv, u, x, y, ix, iy;
+
+            // By switching to (u,v), we combine all eight octant
+            int adx = dx < 0 ? -dx : dx;
+            int ady = dy < 0 ? -dy : dy;
+            x = x1;
+            y = y1;
+            if (adx > ady)
+            {
+                du = adx;
+                dv = ady;
+                u = x2;
+                ix = dx < 0 ? -1 : 1;
+                iy = dy < 0 ? -1 : 1;
+            }
+            else
+            {
+                du = ady;
+                dv = adx;
+                u = y2;
+                ix = dx < 0 ? -1 : 1;
+                iy = dy < 0 ? -1 : 1;
+            }
+
+            int uEnd = u + du;
+            int d = (2 * dv) - du; // Initial value as in Bresenham's
+            int incrS = 2 * dv; // Δd for straight increments
+            int incrD = 2 * (dv - du); // Δd for diagonal increments
+            int twovdu = 0; // Numerator of distance
+            double invD = 1.0 / (2.0 * Math.Sqrt(du * du + dv * dv)); // Precomputed inverse denominator
+            double invD2du = 2.0 * (du * invD); // Precomputed constant
+
+            if (adx > ady)
+            {
+                do
+                {
+                    Color color = Color.FromArgb(buffer.Key[x + buffer.Value * y + 3], buffer.Key[x + buffer.Value * y + 2], buffer.Key[x + buffer.Value * y + 1], buffer.Key[x + buffer.Value * y]);
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y), newColorPixel(color, twovdu * invD)));
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y + iy), newColorPixel(color, invD2du - twovdu * invD)));
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y - iy), newColorPixel(color, invD2du + twovdu * invD)));
+
+                    //newColorPixel(pw, pr, x, y, twovdu * invD, color);
+                    //newColorPixel(pw, pr, x, y + iy, invD2du - twovdu * invD, color);
+                    //newColorPixel(pw, pr, x, y - iy, invD2du + twovdu * invD, color);
+
+                    if (d < 0)
+                    {
+                        // Choose straight
+                        twovdu = d + du;
+                        d += incrS;
+
+                    }
+                    else
+                    {
+                        // Choose diagonal
+                        twovdu = d - du;
+                        d += incrD;
+                        y += iy;
+                    }
+                    u++;
+                    x += ix;
+                } while (u < uEnd);
+            }
+            else
+            {
+                do
+                {
+                    Color color = Color.FromArgb(buffer.Key[x + buffer.Value * y + 3], buffer.Key[x + buffer.Value * y + 2], buffer.Key[x + buffer.Value * y + 1], buffer.Key[x + buffer.Value * y]);
+
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y), newColorPixel(color, twovdu * invD)));
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y + iy), newColorPixel(color, invD2du - twovdu * invD)));
+                    cpDict.Add(new ValueTuple<Point, Color>(new Point(x, y - iy), newColorPixel(color, invD2du + twovdu * invD)));
+
+                    //newColorPixel(pw, pr, x, y, twovdu * invD, color);
+                    //newColorPixel(pw, pr, x, y + iy, invD2du - twovdu * invD, color);
+                    //newColorPixel(pw, pr, x, y - iy, invD2du + twovdu * invD, color);
+
+                    if (d < 0)
+                    {
+                        // Choose straight
+                        twovdu = d + du;
+                        d += incrS;
+                    }
+                    else
+                    {
+                        // Choose diagonal
+                        twovdu = d - du;
+                        d += incrD;
+                        x += ix;
+                    }
+                    u++;
+                    y += iy;
+                } while (u < uEnd);
+            }
+
+            return cpDict;
+        }
+
+        Color newColorPixel(Color old, double dist)
+        {
+            double value = 1 - Math.Pow((dist * 2 / 3), 2);
+            Color color = Color.FromArgb(shapeColor.R, shapeColor.G, shapeColor.B);
+            return ColorInterpolator.InterpolateBetween(old, color, value);
+        }
+
+
     }
 }

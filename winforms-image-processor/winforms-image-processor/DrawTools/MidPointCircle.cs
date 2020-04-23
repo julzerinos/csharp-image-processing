@@ -81,5 +81,15 @@ namespace winforms_image_processor
 
             return points;
         }
+
+        public override List<ValueTuple<Point, Color>> GetPixelsAA(byte[] buffer, int stride)
+        {
+            var cpDict = new List<ValueTuple<Point, Color>>();
+
+            foreach (var point in GetPixels())
+                cpDict.Add(new ValueTuple<Point, Color>(point, shapeColor));
+
+            return cpDict;
+        }
     }
 }

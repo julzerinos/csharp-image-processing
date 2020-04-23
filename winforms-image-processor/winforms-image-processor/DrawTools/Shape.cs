@@ -21,5 +21,6 @@ namespace winforms_image_processor
         abstract public int AddPoint(Point point);
 
         abstract public List<Point> GetPixels();
+        abstract public List<ValueTuple<Point, Color>> GetPixelsAA(byte[] buffer, int stride);
     }
 }

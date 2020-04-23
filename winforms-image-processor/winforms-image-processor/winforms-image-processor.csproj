@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager\CacheManager.cs" />
-    <Compile Include="DrawTools\AntiAliasTools.cs" />
+    <Compile Include="DrawTools\ColorInterpolator.cs" />
     <Compile Include="DrawTools\MidPointCircle.cs" />
     <Compile Include="DrawTools\MidPointLine.cs" />
     <Compile Include="DrawTools\Shape.cs" />

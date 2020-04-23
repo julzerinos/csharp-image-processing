@@ -34,6 +34,7 @@ namespace winforms_image_processor
         }
 
         public override List<Point> GetPixels()
+        // https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm/
         {
             if (!center.HasValue || !radius.HasValue)
                 throw new MissingMemberException();
@@ -80,16 +81,6 @@ namespace winforms_image_processor
             }
 
             return points;
-        }
-
-        public override List<ValueTuple<Point, Color>> GetPixelsAA(byte[] buffer, int stride)
-        {
-            var cpDict = new List<ValueTuple<Point, Color>>();
-
-            foreach (var point in GetPixels())
-                cpDict.Add(new ValueTuple<Point, Color>(point, shapeColor));
-
-            return cpDict;
         }
     }
 }

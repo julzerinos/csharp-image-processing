@@ -17,7 +17,7 @@ namespace winforms_image_processor
 
             BitmapData data = bmp.LockBits(
                 new Rectangle(0, 0, bmp.Width, bmp.Height),
-                ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb
+                ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb
                 );
 
             unsafe
@@ -28,6 +28,31 @@ namespace winforms_image_processor
                     ptr[data.Stride * y + 4 * x + i] = newValues[i];
             }
             bmp.UnlockBits(data);
+        }
+
+        public static Color GetPixelFast(this Bitmap bmp, int x, int y)
+        {
+            BitmapData data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
+                );
+
+            Color col;
+
+            unsafe
+            {
+                byte* ptr = (byte*)data.Scan0;
+
+                col = Color.FromArgb(
+                    ptr[data.Stride * y + 4 * x + 3],
+                    ptr[data.Stride * y + 4 * x + 2],
+                    ptr[data.Stride * y + 4 * x + 1],
+                    ptr[data.Stride * y + 4 * x + 0]
+                );
+            }
+            bmp.UnlockBits(data);
+
+            return col;
         }
 
         public static byte[] GetBitmapDataBytes(this Bitmap bmp, out int stride)

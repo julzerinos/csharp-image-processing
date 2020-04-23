@@ -72,7 +72,7 @@ namespace winforms_image_processor
             Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
             {
-                if (!antialiasingToolStripMenuItem.Checked)
+                if (!antialiasingToolStripMenuItem.Checked || shape.shapeType == DrawingShape.CIRCLE)
                     foreach (var point in shape.GetPixels())
                     {
                         if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
@@ -81,13 +81,9 @@ namespace winforms_image_processor
                         bmp.SetPixelFast(point.X, point.Y, shape.shapeColor);
                     }
                 else
-                    foreach (var point in shape.GetPixelsAA(((Bitmap)pictureBox1.Image).GetBitmapDataBytes(out int stride), stride))
-                    {
-                        if (point.Item1.X >= pictureBox1.Width || point.Item1.Y >= pictureBox1.Height || point.Item1.X <= 0 || point.Item1.Y <= 0)
-                            continue;
-
-                        bmp.SetPixelFast(point.Item1.X, point.Item1.Y, point.Item2);
-                    }
+                {
+                    bmp = ((MidPointLine)shape).SetPixelsAA(bmp);
+                }
             }
             pictureBox1.Image = bmp;
         }

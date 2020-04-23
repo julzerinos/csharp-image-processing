@@ -219,8 +219,11 @@ namespace winforms_image_processor
         Color newColorPixel(Color old, double dist)
         {
             double value = 1 - Math.Pow((dist * 2 / 3), 2);
-            Color color = Color.FromArgb(shapeColor.R, shapeColor.G, shapeColor.B);
-            return ColorInterpolator.InterpolateBetween(old, color, value);
+
+            Console.WriteLine(old.ToString());
+            Console.WriteLine(shapeColor.ToString());
+
+            return ColorInterpolator.InterpolateBetween(old, shapeColor, value);
         }
 
 

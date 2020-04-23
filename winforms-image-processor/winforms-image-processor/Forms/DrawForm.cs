@@ -29,9 +29,19 @@ namespace winforms_image_processor
         {
             shapes.Clear();
 
-            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            pictureBox1.Image = NewBitmap();
 
             toolsToolStripMenuItem.Enabled = true;
+        }
+
+        Bitmap NewBitmap()
+        {
+            var bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+            Graphics g = Graphics.FromImage(bmp);
+            g.Clear(Color.Green);
+
+            return bmp;
         }
 
         private void DrawForm_ResizeEnd(object sender, EventArgs e)
@@ -59,7 +69,7 @@ namespace winforms_image_processor
 
         void RefreshShapes()
         {
-            Bitmap bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
             {
                 if (!antialiasingToolStripMenuItem.Checked)
@@ -202,6 +212,11 @@ namespace winforms_image_processor
                     return;
             }
 
+            RefreshShapes();
+        }
+
+        private void antialiasingToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
             RefreshShapes();
         }
     }

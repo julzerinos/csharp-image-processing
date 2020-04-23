@@ -36,6 +36,8 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.midpointLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.midpointCircleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.antialiasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -47,8 +49,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.antialiasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -128,6 +128,22 @@
             this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.midpointCircleToolStripMenuItem.Text = "Midpoint circle";
             this.midpointCircleToolStripMenuItem.Click += new System.EventHandler(this.midpointCircleToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.antialiasingToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // antialiasingToolStripMenuItem
+            // 
+            this.antialiasingToolStripMenuItem.CheckOnClick = true;
+            this.antialiasingToolStripMenuItem.Name = "antialiasingToolStripMenuItem";
+            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.antialiasingToolStripMenuItem.Text = "Antialiasing";
+            this.antialiasingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.antialiasingToolStripMenuItem_CheckedChanged);
             // 
             // splitContainer1
             // 
@@ -259,21 +275,6 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(89, 275);
             this.listBox1.TabIndex = 0;
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.antialiasingToolStripMenuItem});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // antialiasingToolStripMenuItem
-            // 
-            this.antialiasingToolStripMenuItem.CheckOnClick = true;
-            this.antialiasingToolStripMenuItem.Name = "antialiasingToolStripMenuItem";
-            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.antialiasingToolStripMenuItem.Text = "Antialiasing";
             // 
             // DrawForm
             // 

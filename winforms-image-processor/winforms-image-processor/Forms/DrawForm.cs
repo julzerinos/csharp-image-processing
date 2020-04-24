@@ -34,12 +34,13 @@ namespace winforms_image_processor
             toolsToolStripMenuItem.Enabled = true;
         }
 
+        Color backColor = Color.Green;
         Bitmap NewBitmap()
         {
             var bmp = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             Graphics g = Graphics.FromImage(bmp);
-            g.Clear(Color.Green);
+            g.Clear(backColor);
 
             return bmp;
         }
@@ -213,7 +214,18 @@ namespace winforms_image_processor
 
         private void antialiasingToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
+            if (pictureBox1.Image == null)
+                return;
             RefreshShapes();
+        }
+
+        private void backgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (colorDialog2.ShowDialog() == DialogResult.OK)
+            {
+                backColor = colorDialog2.Color;
+                RefreshShapes();
+            }
         }
     }
 }

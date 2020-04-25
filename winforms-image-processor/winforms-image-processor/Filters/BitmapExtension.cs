@@ -20,7 +20,12 @@ namespace winforms_image_processor
                 ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb
                 );
 
-            if (data.Stride * y + 4 * x < data.Stride * data.Height && data.Stride * y + 4 * x >= 0)
+            if (
+                data.Stride * y + 4 * x < data.Stride * data.Height
+                && data.Stride * y + 4 * x >= 0
+                && x * 4 < data.Stride
+                && y < data.Height
+                )
                 unsafe
                 {
                     byte* ptr = (byte*)data.Scan0;

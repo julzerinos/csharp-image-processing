@@ -38,6 +38,7 @@
             this.midpointCircleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.antialiasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -49,8 +50,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.backgroundColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
+            this.polygonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -111,7 +113,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.midpointLineToolStripMenuItem,
-            this.midpointCircleToolStripMenuItem});
+            this.midpointCircleToolStripMenuItem,
+            this.polygonToolStripMenuItem});
             this.toolsToolStripMenuItem.Enabled = false;
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
@@ -120,14 +123,14 @@
             // midpointLineToolStripMenuItem
             // 
             this.midpointLineToolStripMenuItem.Name = "midpointLineToolStripMenuItem";
-            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.midpointLineToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.midpointLineToolStripMenuItem.Text = "Midpoint Line";
             this.midpointLineToolStripMenuItem.Click += new System.EventHandler(this.midpointLineToolStripMenuItem_Click);
             // 
             // midpointCircleToolStripMenuItem
             // 
             this.midpointCircleToolStripMenuItem.Name = "midpointCircleToolStripMenuItem";
-            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.midpointCircleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.midpointCircleToolStripMenuItem.Text = "Midpoint circle";
             this.midpointCircleToolStripMenuItem.Click += new System.EventHandler(this.midpointCircleToolStripMenuItem_Click);
             // 
@@ -144,9 +147,16 @@
             // 
             this.antialiasingToolStripMenuItem.CheckOnClick = true;
             this.antialiasingToolStripMenuItem.Name = "antialiasingToolStripMenuItem";
-            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.antialiasingToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.antialiasingToolStripMenuItem.Text = "Antialiasing";
             this.antialiasingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.antialiasingToolStripMenuItem_CheckedChanged);
+            // 
+            // backgroundColorToolStripMenuItem
+            // 
+            this.backgroundColorToolStripMenuItem.Name = "backgroundColorToolStripMenuItem";
+            this.backgroundColorToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.backgroundColorToolStripMenuItem.Text = "Background Color";
+            this.backgroundColorToolStripMenuItem.Click += new System.EventHandler(this.backgroundColorToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -177,6 +187,8 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
+            this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
             // splitContainer2
             // 
@@ -188,6 +200,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer2.Panel1.Controls.Add(this.button3);
             this.splitContainer2.Panel1.Controls.Add(this.button2);
             this.splitContainer2.Panel1.Controls.Add(this.label2);
@@ -199,12 +212,12 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.listBox1);
             this.splitContainer2.Size = new System.Drawing.Size(93, 426);
-            this.splitContainer2.SplitterDistance = 143;
+            this.splitContainer2.SplitterDistance = 218;
             this.splitContainer2.TabIndex = 0;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(6, 113);
+            this.button3.Location = new System.Drawing.Point(9, 188);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 5;
@@ -214,18 +227,18 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 92);
+            this.button2.Location = new System.Drawing.Point(9, 167);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
-            this.button2.Text = "Modify";
+            this.button2.Text = "Redraw";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 50);
+            this.label2.Location = new System.Drawing.Point(30, 101);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 3;
@@ -233,7 +246,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(38, 66);
+            this.numericUpDown1.Location = new System.Drawing.Point(36, 117);
             this.numericUpDown1.Minimum = new decimal(new int[] {
             1,
             0,
@@ -252,7 +265,7 @@
             // 
             this.button1.BackColor = System.Drawing.Color.Black;
             this.button1.ForeColor = System.Drawing.Color.CornflowerBlue;
-            this.button1.Location = new System.Drawing.Point(6, 66);
+            this.button1.Location = new System.Drawing.Point(4, 117);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(26, 20);
             this.button1.TabIndex = 1;
@@ -276,15 +289,27 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(89, 275);
+            this.listBox1.Size = new System.Drawing.Size(89, 200);
             this.listBox1.TabIndex = 0;
             // 
-            // backgroundColorToolStripMenuItem
+            // polygonToolStripMenuItem
             // 
-            this.backgroundColorToolStripMenuItem.Name = "backgroundColorToolStripMenuItem";
-            this.backgroundColorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.backgroundColorToolStripMenuItem.Text = "Background Color";
-            this.backgroundColorToolStripMenuItem.Click += new System.EventHandler(this.backgroundColorToolStripMenuItem_Click);
+            this.polygonToolStripMenuItem.Name = "polygonToolStripMenuItem";
+            this.polygonToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.polygonToolStripMenuItem.Text = "Polygon";
+            this.polygonToolStripMenuItem.Click += new System.EventHandler(this.polygonToolStripMenuItem_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(23, 146);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(44, 23);
+            this.checkBox1.TabIndex = 6;
+            this.checkBox1.Text = "Move";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // DrawForm
             // 
@@ -340,5 +365,7 @@
         private System.Windows.Forms.ToolStripMenuItem antialiasingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundColorToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog2;
+        private System.Windows.Forms.ToolStripMenuItem polygonToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

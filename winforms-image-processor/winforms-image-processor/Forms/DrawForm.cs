@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace winforms_image_processor
 {
-    public enum DrawingShape { EMPTY, LINE, CIRCLE };
+    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY };
 
     public partial class DrawForm : Form
     {
@@ -47,25 +47,25 @@ namespace winforms_image_processor
 
         private void DrawForm_ResizeEnd(object sender, EventArgs e)
         {
+            if (pictureBox1.Width <= 0 || pictureBox1.Height <= 0)
+                return;
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             RefreshShapes();
         }
 
         void UpdateLabel()
         {
-            switch (currentDrawingShape)
+            StringBuilder sb;
+            if (currentShape == null)
+                sb = new StringBuilder();
+            else
             {
-                case DrawingShape.LINE:
-                    label1.Text = "Currently drawing: line";
-                    break;
-                case DrawingShape.CIRCLE:
-                    label1.Text = "Currently drawing: circle";
-                    break;
-                case DrawingShape.EMPTY:
-                default:
-                    label1.Text = "";
-                    break;
+                sb = new StringBuilder("Currently drawing: ");
+                sb.Append(currentShape.ToString());
+
             }
+
+            label1.Text = sb.ToString();
         }
 
         void RefreshShapes()
@@ -74,25 +74,35 @@ namespace winforms_image_processor
             foreach (var shape in shapes)
             {
                 if (!antialiasingToolStripMenuItem.Checked || shape.shapeType == DrawingShape.CIRCLE)
-                    foreach (var point in shape.GetPixels())
-                    {
-                        if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
-                            continue;
-
-                        bmp.SetPixelFast(point.X, point.Y, shape.shapeColor);
-                    }
+                    DrawShape(bmp, shape);
                 else
                 {
-                    bmp = ((MidPointLine)shape).SetPixelsAA(bmp);
+                    if (shape.shapeType == DrawingShape.LINE)
+                        bmp = ((MidPointLine)shape).SetPixelsAA(bmp);
+                    else
+                        bmp = ((Polygon)shape).SetPixelsAA(bmp);
                 }
             }
             pictureBox1.Image = bmp;
         }
 
+        Bitmap DrawShape(Bitmap bmp, Shape shape)
+        {
+            foreach (var point in shape.GetPixels())
+            {
+                if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
+                    continue;
+
+                bmp.SetPixelFast(point.X, point.Y, shape.shapeColor);
+            }
+
+            return bmp;
+        }
 
         Shape currentShape = null;
         DrawingShape currentDrawingShape = DrawingShape.EMPTY;
-        bool drawing;
+        bool drawing = false;
+        bool moving = false;
         int index;
 
         void drawMode(
@@ -121,10 +131,22 @@ namespace winforms_image_processor
             UpdateLabel();
         }
 
+
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (drawing)
             {
+                if (currentShape.shapeType == DrawingShape.POLY)
+                {
+                    if (1 == ((Polygon)currentShape).AddPoint(e.Location, out MidPointLine line))
+                        drawMode(false);
+
+                    if (line != null)
+                        pictureBox1.Image = DrawShape((Bitmap)pictureBox1.Image, line);
+
+                    return;
+                }
+
                 if (1 == currentShape.AddPoint(e.Location))
                     drawMode(false);
             }
@@ -140,6 +162,11 @@ namespace winforms_image_processor
             drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value));
         }
 
+        private void polygonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
@@ -153,10 +180,22 @@ namespace winforms_image_processor
             if (shapes.Count == 0)
                 return;
 
-            if (shapes[listBox1.SelectedIndex].shapeType == DrawingShape.CIRCLE)
-                drawMode(true, new MidPointCircle(colorDialog1.Color), listBox1.SelectedIndex);
-            else
-                drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+            switch (shapes[listBox1.SelectedIndex].shapeType)
+            {
+                case DrawingShape.CIRCLE:
+                    drawMode(true, new MidPointCircle(colorDialog1.Color), listBox1.SelectedIndex);
+                    break;
+                case DrawingShape.LINE:
+                    drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+                    break;
+                case DrawingShape.POLY:
+                    drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+                    break;
+
+                default:
+                case DrawingShape.EMPTY:
+                    break;
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -203,7 +242,9 @@ namespace winforms_image_processor
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    shapes = ShapeSerializer.Load<Shape>(openFileDialog.FileName);
+                    shapes.Clear();
+                    foreach (var shape in ShapeSerializer.Load<Shape>(openFileDialog.FileName))
+                        shapes.Add(shape);
                 }
                 else
                     return;
@@ -226,6 +267,42 @@ namespace winforms_image_processor
                 backColor = colorDialog2.Color;
                 RefreshShapes();
             }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            moving = true;
+        }
+
+        System.Drawing.Point movestart;
+        System.Drawing.Point moveend;
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!moving)
+                return;
+
+            movestart = e.Location;
+            splitContainer2.Panel1.Enabled = false;
+            checkBox1.Checked = false;
+
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!moving)
+                return;
+
+            moveend = e.Location;
+
+            moving = false;
+            checkBox1.Checked = false;
+
+            splitContainer2.Panel1.Enabled = true;
+
+            ((Shape)listBox1.SelectedItem).MovePoints(moveend - (System.Drawing.Size)movestart);
+
+            RefreshShapes();
         }
     }
 }

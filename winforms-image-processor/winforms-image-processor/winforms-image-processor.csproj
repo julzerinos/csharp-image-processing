@@ -52,6 +52,7 @@
     <Compile Include="DrawTools\ColorInterpolator.cs" />
     <Compile Include="DrawTools\MidPointCircle.cs" />
     <Compile Include="DrawTools\MidPointLine.cs" />
+    <Compile Include="DrawTools\Polygon.cs" />
     <Compile Include="DrawTools\Shape.cs" />
     <Compile Include="Filters\BitmapExtension.cs" />
     <Compile Include="Filters\ColorspaceTools.cs" />

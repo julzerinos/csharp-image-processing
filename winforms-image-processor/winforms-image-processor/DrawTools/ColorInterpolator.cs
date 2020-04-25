@@ -24,7 +24,6 @@ namespace winforms_image_processor
             {
                 throw new ArgumentOutOfRangeException("lambda");
             }
-            Console.WriteLine(lambda);
             Color color = Color.FromArgb(
                 InterpolateComponent(endPoint1, endPoint2, lambda, _redSelector),
                 InterpolateComponent(endPoint1, endPoint2, lambda, _greenSelector),

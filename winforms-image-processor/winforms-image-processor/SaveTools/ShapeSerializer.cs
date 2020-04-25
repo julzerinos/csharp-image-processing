@@ -47,6 +47,8 @@ namespace winforms_image_processor
                         formatter.Serialize(stream, (MidPointCircle)shaped);
                     else if (shaped.shapeType == DrawingShape.LINE)
                         formatter.Serialize(stream, (MidPointLine)shaped);
+                    else if (shaped.shapeType == DrawingShape.POLY)
+                        formatter.Serialize(stream, (Polygon)shaped);
                 }
             }
         }

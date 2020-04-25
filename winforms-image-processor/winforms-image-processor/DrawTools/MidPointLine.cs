@@ -20,6 +20,14 @@ namespace winforms_image_processor
             shapeType = DrawingShape.LINE;
         }
 
+        public MidPointLine(Color color, int thicc, Point start, Point end) : base(color)
+        {
+            thickness = thicc - 1;
+            shapeType = DrawingShape.LINE;
+            startPoint = start;
+            endPoint = end;
+        }
+
         public override string ToString()
         {
             return "Line";
@@ -151,17 +159,8 @@ namespace winforms_image_processor
                 do
                 {
                     newColorPixel(bmp, x, y, twovdu * invD);
-                    for (int i = 0; i < thickness; i++)
-                    {
-                        newColorPixel(bmp, x, y + i * iy, invD2du - i * twovdu * invD);
-                        newColorPixel(bmp, x, y - i * iy, invD2du + i * twovdu * invD);
-                    }
-                    //newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD);
-                    //newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD);
-
-                    //newColorPixel(pw, pr, x, y, twovdu * invD, color);
-                    //newColorPixel(pw, pr, x, y + iy, invD2du - twovdu * invD, color);
-                    //newColorPixel(pw, pr, x, y - iy, invD2du + twovdu * invD, color);
+                    newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD);
+                    newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD);
 
                     if (d < 0)
                     {
@@ -186,15 +185,8 @@ namespace winforms_image_processor
                 do
                 {
                     newColorPixel(bmp, x, y, twovdu * invD);
-                    for (int i = 0; i < thickness; i++)
-                    {
-                        newColorPixel(bmp, x, y + i * iy, invD2du - i * twovdu * invD);
-                        newColorPixel(bmp, x, y - i * iy, invD2du + i * twovdu * invD);
-                    }
-
-                    //newColorPixel(pw, pr, x, y, twovdu * invD, color);
-                    //newColorPixel(pw, pr, x, y + iy, invD2du - twovdu * invD, color);
-                    //newColorPixel(pw, pr, x, y - iy, invD2du + twovdu * invD, color);
+                    newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD);
+                    newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD);
 
                     if (d < 0)
                     {
@@ -221,11 +213,16 @@ namespace winforms_image_processor
         {
             double value = 1 - Math.Pow((dist * 2 / 3), 2);
 
-            Color old = bmp.GetPixelFast(x,y);
+            Color old = bmp.GetPixelFast(x, y);
             Color col = ColorInterpolator.InterpolateBetween(old, shapeColor, value);
 
             bmp.SetPixelFast(x, y, col);
         }
 
+        public override void MovePoints(Point displacement)
+        {
+            startPoint = startPoint.Value + (Size)displacement;
+            endPoint = endPoint.Value + (Size)displacement;
+        }
     }
 }

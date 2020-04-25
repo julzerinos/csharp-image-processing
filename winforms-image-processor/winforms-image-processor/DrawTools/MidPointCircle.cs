@@ -82,5 +82,10 @@ namespace winforms_image_processor
 
             return points;
         }
+
+        public override void MovePoints(Point displacement)
+        {
+            center = center.Value + (Size)displacement;
+        }
     }
 }

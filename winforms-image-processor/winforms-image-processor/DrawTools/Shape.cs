@@ -21,5 +21,7 @@ namespace winforms_image_processor
         abstract public int AddPoint(Point point);
 
         abstract public List<Point> GetPixels();
+
+        abstract public void MovePoints(Point displacement);
     }
 }

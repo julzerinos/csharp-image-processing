@@ -49,6 +49,8 @@ namespace winforms_image_processor
                         formatter.Serialize(stream, (MidPointLine)shaped);
                     else if (shaped.shapeType == DrawingShape.POLY)
                         formatter.Serialize(stream, (Polygon)shaped);
+                    else if (shaped.shapeType == DrawingShape.CAPS)
+                        formatter.Serialize(stream, (Capsule)shaped);
                 }
             }
         }

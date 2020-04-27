@@ -15,7 +15,7 @@ namespace winforms_image_processor
         int? radius = null;
 
         public Capsule(Color color) : base(color)
-        { }
+        { shapeType = DrawingShape.CAPS; }
 
         public override int AddPoint(Point point)
         {
@@ -73,6 +73,11 @@ namespace winforms_image_processor
         public override string ToString()
         {
             return "Capsule";
+        }
+
+        public override string howToDraw()
+        {
+            return "Click point 1, point 2 and radius.";
         }
     }
 }

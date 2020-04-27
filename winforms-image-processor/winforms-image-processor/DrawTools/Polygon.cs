@@ -58,6 +58,11 @@ namespace winforms_image_processor
             return pixels;
         }
 
+        public override string howToDraw()
+        {
+            return "Click each point and click on first to finish.";
+        }
+
         public override void MovePoints(Point displacement)
         {
             for (int i = 0; i < points.Count; i++)

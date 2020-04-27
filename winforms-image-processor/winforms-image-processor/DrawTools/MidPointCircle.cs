@@ -149,5 +149,10 @@ namespace winforms_image_processor
         {
             center = center.Value + (Size)displacement;
         }
+
+        public override string howToDraw()
+        {
+            return "Click center and radius";
+        }
     }
 }

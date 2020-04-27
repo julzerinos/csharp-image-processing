@@ -224,5 +224,10 @@ namespace winforms_image_processor
             startPoint = startPoint.Value + (Size)displacement;
             endPoint = endPoint.Value + (Size)displacement;
         }
+
+        public override string howToDraw()
+        {
+            return "Click start and end points";
+        }
     }
 }

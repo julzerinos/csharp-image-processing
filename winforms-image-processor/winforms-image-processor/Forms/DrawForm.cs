@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace winforms_image_processor
 {
-    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY };
+    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY, CAPS };
 
     public partial class DrawForm : Form
     {
@@ -61,8 +61,8 @@ namespace winforms_image_processor
             else
             {
                 sb = new StringBuilder("Currently drawing: ");
-                sb.Append(currentShape.ToString());
-
+                sb.AppendLine(currentShape.ToString());
+                sb.Append(currentShape.howToDraw());
             }
 
             label1.Text = sb.ToString();
@@ -195,6 +195,9 @@ namespace winforms_image_processor
                     break;
                 case DrawingShape.POLY:
                     drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
+                    break;
+                case DrawingShape.CAPS:
+                    drawMode(true, new Capsule(colorDialog1.Color), listBox1.SelectedIndex);
                     break;
 
                 default:

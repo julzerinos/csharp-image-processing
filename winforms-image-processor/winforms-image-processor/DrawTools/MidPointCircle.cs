@@ -88,8 +88,6 @@ namespace winforms_image_processor
                 y = (int)Math.Round((points[i].X - center.Value.X) * sin + (points[i].Y - center.Value.Y) * cos + center.Value.Y);
 
                 points[i] = new Point(x, y);
-
-                Console.WriteLine((points[i]));
             }
 
             return points;

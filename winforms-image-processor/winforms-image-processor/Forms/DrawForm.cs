@@ -73,13 +73,13 @@ namespace winforms_image_processor
             Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
             {
-                if (!antialiasingToolStripMenuItem.Checked || shape.shapeType == DrawingShape.CIRCLE)
+                if (!antialiasingToolStripMenuItem.Checked || shape.shapeType == DrawingShape.CIRCLE || shape.shapeType == DrawingShape.CAPS)
                     DrawShape(bmp, shape);
                 else
                 {
                     if (shape.shapeType == DrawingShape.LINE)
                         bmp = ((MidPointLine)shape).SetPixelsAA(bmp);
-                    else
+                    else if (shape.shapeType == DrawingShape.POLY)
                         bmp = ((Polygon)shape).SetPixelsAA(bmp);
                 }
             }

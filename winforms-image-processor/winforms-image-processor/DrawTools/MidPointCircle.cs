@@ -48,9 +48,6 @@ namespace winforms_image_processor
             if (radius.Value == 0)
                 return new List<Point>() { center.Value };
 
-            var sin = Math.Sin(angle);
-            var cos = Math.Cos(angle);
-
             var points = new List<Point>();
 
             int x = radius.Value, y = 0;
@@ -72,20 +69,27 @@ namespace winforms_image_processor
                 if (x < y)
                     break;
 
-                int rotX = (int)Math.Round(x * cos - y * sin);
-                int rotY = (int)Math.Round(x * sin + y * cos);
+                points.Add(new Point(x + center.Value.X, y + center.Value.Y));
+                points.Add(new Point(x + center.Value.X, -y + center.Value.Y));
 
-                points.Add(new Point(rotX + center.Value.X, rotY + center.Value.Y));
-                points.Add(new Point(rotX + center.Value.X, -rotY + center.Value.Y));
-
-                // If the generated point is on the  
-                // line x = y then the perimeter points 
-                // have already been printed 
                 if (x != y)
                 {
-                    points.Add(new Point(rotY + center.Value.X, rotX + center.Value.Y));
-                    points.Add(new Point(rotY + center.Value.X, -rotX + center.Value.Y));
+                    points.Add(new Point(y + center.Value.X, x + center.Value.Y));
+                    points.Add(new Point(y + center.Value.X, -x + center.Value.Y));
                 }
+            }
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                x = (int)Math.Round((points[i].X - center.Value.X) * cos - (points[i].Y - center.Value.Y) * sin + center.Value.X);
+                y = (int)Math.Round((points[i].X - center.Value.X) * sin + (points[i].Y - center.Value.Y) * cos + center.Value.Y);
+
+                points[i] = new Point(x, y);
+
+                Console.WriteLine((points[i]));
             }
 
             return points;

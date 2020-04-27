@@ -41,8 +41,8 @@ namespace winforms_image_processor
             var upperEnd = getAuxPoint(endPoint.Value, startPoint.Value, 1, out double angle3);
             var upperStart = getAuxPoint(startPoint.Value, endPoint.Value, -1, out double angle4);
 
-            points.AddRange(new MidPointCircle(shapeColor, startPoint.Value, radius.Value).getSemiCircle(angle1));
-            points.AddRange(new MidPointCircle(shapeColor, endPoint.Value, radius.Value).getSemiCircle(angle4));
+            points.AddRange(new MidPointCircle(shapeColor, startPoint.Value, radius.Value).getSemiCircle(angle1 + Math.PI/2));
+            points.AddRange(new MidPointCircle(shapeColor, endPoint.Value, radius.Value).getSemiCircle(angle3 + Math.PI/2));
 
             points.AddRange(new MidPointLine(shapeColor, 1, lowerStart, lowerEnd).GetPixels());
             points.AddRange(new MidPointLine(shapeColor, 1, upperStart, upperEnd).GetPixels());

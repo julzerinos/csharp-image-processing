@@ -167,6 +167,11 @@ namespace winforms_image_processor
             drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value));
         }
 
+        private void capsuleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new Capsule(colorDialog1.Color));
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog() == DialogResult.OK)
@@ -304,5 +309,7 @@ namespace winforms_image_processor
 
             RefreshShapes();
         }
+
+
     }
 }

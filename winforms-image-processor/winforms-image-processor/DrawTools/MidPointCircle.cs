@@ -16,6 +16,13 @@ namespace winforms_image_processor
         public MidPointCircle(Color color) : base(color)
         { shapeType = DrawingShape.CIRCLE; }
 
+        public MidPointCircle(Color color, Point center, int radius) : base(color)
+        {
+            shapeType = DrawingShape.CIRCLE;
+            this.center = center;
+            this.radius = radius;
+        }
+
         public override string ToString()
         {
             return "Circle";
@@ -31,6 +38,57 @@ namespace winforms_image_processor
                 return 1;
             }
             return 0;
+        }
+
+        public List<Point> getSemiCircle(double angle)
+        {
+            if (!center.HasValue || !radius.HasValue)
+                throw new MissingMemberException();
+
+            if (radius.Value == 0)
+                return new List<Point>() { center.Value };
+
+            var sin = Math.Sin(angle);
+            var cos = Math.Cos(angle);
+
+            var points = new List<Point>();
+
+            int x = radius.Value, y = 0;
+            int P = 1 - x;
+
+            while (x > y)
+            {
+
+                y++;
+
+                if (P <= 0)
+                    P = P + 2 * y + 1;
+                else
+                {
+                    x--;
+                    P = P + 2 * y - 2 * x + 1;
+                }
+
+                if (x < y)
+                    break;
+
+                int rotX = (int)Math.Round(x * cos - y * sin);
+                int rotY = (int)Math.Round(x * sin + y * cos);
+
+                points.Add(new Point(rotX + center.Value.X, rotY + center.Value.Y));
+                points.Add(new Point(rotX + center.Value.X, -rotY + center.Value.Y));
+
+                // If the generated point is on the  
+                // line x = y then the perimeter points 
+                // have already been printed 
+                if (x != y)
+                {
+                    points.Add(new Point(rotY + center.Value.X, rotX + center.Value.Y));
+                    points.Add(new Point(rotY + center.Value.X, -rotX + center.Value.Y));
+                }
+            }
+
+            return points;
         }
 
         public override List<Point> GetPixels()

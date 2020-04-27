@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheManager\CacheManager.cs" />
+    <Compile Include="DrawTools\Capsule.cs" />
     <Compile Include="DrawTools\ColorInterpolator.cs" />
     <Compile Include="DrawTools\MidPointCircle.cs" />
     <Compile Include="DrawTools\MidPointLine.cs" />

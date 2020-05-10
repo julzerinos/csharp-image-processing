@@ -31,9 +31,9 @@ namespace winforms_image_processor
             return 0;
         }
 
-        public override List<Point> GetPixels()
+        public override List<ColorPoint> GetPixels(params object[] param)
         {
-            var points = new List<Point>();
+            var points = new List<ColorPoint>();
 
             var lowerStart = getAuxPoint(startPoint.Value, endPoint.Value, 1, out double angle1);
             var lowerEnd = getAuxPoint(endPoint.Value, startPoint.Value, -1, out double angle2);
@@ -78,6 +78,11 @@ namespace winforms_image_processor
         public override string howToDraw()
         {
             return "Click point 1, point 2 and radius.";
+        }
+
+        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        {
+            throw new NotImplementedException();
         }
     }
 }

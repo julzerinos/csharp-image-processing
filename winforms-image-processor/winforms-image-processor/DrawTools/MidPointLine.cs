@@ -14,10 +14,13 @@ namespace winforms_image_processor
         public Point? endPoint = null;
         public int thickness;
 
+        Clipping clipper = null;
+
         public MidPointLine(Color color, int thicc) : base(color)
         {
             thickness = thicc - 1;
             shapeType = DrawingShape.LINE;
+            supportsAA = true;
         }
 
         public MidPointLine(Color color, int thicc, Point start, Point end) : base(color)
@@ -26,6 +29,15 @@ namespace winforms_image_processor
             shapeType = DrawingShape.LINE;
             startPoint = start;
             endPoint = end;
+        }
+
+        public MidPointLine(Color color, int thicc, Point start, Point end, Clipping clip) : base(color)
+        {
+            thickness = thicc - 1;
+            shapeType = DrawingShape.LINE;
+            startPoint = start;
+            endPoint = end;
+            clipper = clip;
         }
 
         public override string ToString()
@@ -45,20 +57,30 @@ namespace winforms_image_processor
             return 0;
         }
 
-        public override List<Point> GetPixels()
+        public override List<ColorPoint> GetPixels(params object[] param)
         {
-            return BresenhamMidPointAlgorithm((Point)startPoint, (Point)endPoint);
+            Line line = new Line(startPoint.Value, endPoint.Value);
+
+            if (clipper != null && !clipper.ClipLine(ref line))
+                return new List<ColorPoint>();
+
+            return BresenhamMidPointAlgorithm(line.Start, line.End);
         }
 
-        public Bitmap SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
         {
-            return GuptaSproullAlgorithm(bmp);
+            Line line = new Line(startPoint.Value, endPoint.Value);
+
+            if (clipper != null && !clipper.ClipLine(ref line))
+                return new List<ColorPoint>();
+
+            return GuptaSproullAlgorithm(bmp, line.Start, line.End);
         }
 
-        List<Point> BresenhamMidPointAlgorithm(Point start, Point end)
+        List<ColorPoint> BresenhamMidPointAlgorithm(Point start, Point end)
         // https://stackoverflow.com/questions/11678693/all-cases-covered-bresenhams-line-algorithm
         {
-            List<Point> points = new List<Point>();
+            List<ColorPoint> points = new List<ColorPoint>();
 
             int x = start.X, y = start.Y;
             int x2 = end.X, y2 = end.Y;
@@ -81,18 +103,18 @@ namespace winforms_image_processor
             int numerator = longest >> 1;
             for (int i = 0; i <= longest; i++)
             {
-                points.Add(new Point(x, y));
+                points.Add(new ColorPoint(shapeColor, new Point(x, y)));
                 if (Math.Abs(h) > Math.Abs(w))
                     for (int j = 1; j < thickness; j++)
                     {
-                        points.Add(new Point(x - j, y));
-                        points.Add(new Point(x + j, y));
+                        points.Add(new ColorPoint(shapeColor, new Point(x - j, y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(x + j, y)));
                     }
                 else if (Math.Abs(w) > Math.Abs(h))
                     for (int j = 1; j < thickness; j++)
                     {
-                        points.Add(new Point(x, y - j));
-                        points.Add(new Point(x, y + j));
+                        points.Add(new ColorPoint(shapeColor, new Point(x - j, y)));
+                        points.Add(new ColorPoint(shapeColor, new Point(x + j, y)));
                     }
 
                 numerator += shortest;
@@ -112,12 +134,14 @@ namespace winforms_image_processor
             return points;
         }
 
-        Bitmap GuptaSproullAlgorithm(Bitmap bmp)
+        List<ColorPoint> GuptaSproullAlgorithm(Bitmap bmp, Point start, Point end)
         // http://elynxsdk.free.fr/ext-docs/Rasterization/Antialiasing/Gupta%20sproull%20antialiased%20lines.htm
         // https://jamesarich.weebly.com/uploads/1/4/0/3/14035069/480xprojectreport.pdf
         {
-            int x1 = startPoint.Value.X, y1 = startPoint.Value.Y;
-            int x2 = endPoint.Value.X, y2 = endPoint.Value.Y;
+            var points = new List<ColorPoint>();
+
+            int x1 = start.X, y1 = start.Y;
+            int x2 = end.X, y2 = end.Y;
 
             int dx = x2 - x1;
             int dy = y2 - y1;
@@ -158,9 +182,10 @@ namespace winforms_image_processor
             {
                 do
                 {
-                    newColorPixel(bmp, x, y, twovdu * invD);
-                    newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD);
-                    newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD);
+                    points.Add(newColorPixel(bmp, x, y, twovdu * invD));
+                    points.Add(newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD));
+                    points.Add(newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD));
+
 
                     if (d < 0)
                     {
@@ -184,9 +209,9 @@ namespace winforms_image_processor
             {
                 do
                 {
-                    newColorPixel(bmp, x, y, twovdu * invD);
-                    newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD);
-                    newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD);
+                    points.Add(newColorPixel(bmp, x, y, twovdu * invD));
+                    points.Add(newColorPixel(bmp, x, y + iy, invD2du - twovdu * invD));
+                    points.Add(newColorPixel(bmp, x, y - iy, invD2du + twovdu * invD));
 
                     if (d < 0)
                     {
@@ -206,17 +231,17 @@ namespace winforms_image_processor
                 } while (u < uEnd);
             }
 
-            return bmp;
+            return points;
         }
 
-        void newColorPixel(Bitmap bmp, int x, int y, double dist)
+        ColorPoint newColorPixel(Bitmap bmp, int x, int y, double dist)
         {
             double value = 1 - Math.Pow((dist * 2 / 3), 2);
 
             Color old = bmp.GetPixelFast(x, y);
             Color col = ColorInterpolator.InterpolateBetween(old, shapeColor, value);
 
-            bmp.SetPixelFast(x, y, col);
+            return new ColorPoint(col, new Point(x, y));
         }
 
         public override void MovePoints(Point displacement)

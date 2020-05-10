@@ -40,15 +40,15 @@ namespace winforms_image_processor
             return 0;
         }
 
-        public List<Point> getSemiCircle(double angle)
+        public List<ColorPoint> getSemiCircle(double angle)
         {
             if (!center.HasValue || !radius.HasValue)
                 throw new MissingMemberException();
 
             if (radius.Value == 0)
-                return new List<Point>() { center.Value };
+                return new List<ColorPoint>() { new ColorPoint(shapeColor, center.Value) };
 
-            var points = new List<Point>();
+            var points = new List<ColorPoint>();
 
             int x = radius.Value, y = 0;
             int P = 1 - x;
@@ -69,13 +69,13 @@ namespace winforms_image_processor
                 if (x < y)
                     break;
 
-                points.Add(new Point(x + center.Value.X, y + center.Value.Y));
-                points.Add(new Point(x + center.Value.X, -y + center.Value.Y));
+                points.Add(new ColorPoint(shapeColor, new Point(x + center.Value.X, y + center.Value.Y)));
+                points.Add(new ColorPoint(shapeColor, new Point(x + center.Value.X, -y + center.Value.Y)));
 
                 if (x != y)
                 {
-                    points.Add(new Point(y + center.Value.X, x + center.Value.Y));
-                    points.Add(new Point(y + center.Value.X, -x + center.Value.Y));
+                    points.Add(new ColorPoint(shapeColor, new Point(y + center.Value.X, x + center.Value.Y)));
+                    points.Add(new ColorPoint(shapeColor, new Point(y + center.Value.X, -x + center.Value.Y)));
                 }
             }
 
@@ -84,25 +84,25 @@ namespace winforms_image_processor
 
             for (int i = 0; i < points.Count; i++)
             {
-                x = (int)Math.Round((points[i].X - center.Value.X) * cos - (points[i].Y - center.Value.Y) * sin + center.Value.X);
-                y = (int)Math.Round((points[i].X - center.Value.X) * sin + (points[i].Y - center.Value.Y) * cos + center.Value.Y);
+                x = (int)Math.Round((points[i].Point.X - center.Value.X) * cos - (points[i].Point.Y - center.Value.Y) * sin + center.Value.X);
+                y = (int)Math.Round((points[i].Point.X - center.Value.X) * sin + (points[i].Point.Y - center.Value.Y) * cos + center.Value.Y);
 
-                points[i] = new Point(x, y);
+                points[i] = new ColorPoint(shapeColor, new Point(x, y));
             }
 
             return points;
         }
 
-        public override List<Point> GetPixels()
+        public override List<ColorPoint> GetPixels(params object[] param)
         // https://www.geeksforgeeks.org/mid-point-circle-drawing-algorithm/
         {
             if (!center.HasValue || !radius.HasValue)
                 throw new MissingMemberException();
 
             if (radius.Value == 0)
-                return new List<Point>() { center.Value };
+                return new List<ColorPoint>() { new ColorPoint(shapeColor, center.Value) };
 
-            var points = new List<Point>();
+            var points = new List<ColorPoint>();
 
             int x = radius.Value, y = 0;
             int P = 1 - x;
@@ -123,20 +123,20 @@ namespace winforms_image_processor
                 if (x < y)
                     break;
 
-                points.Add(new Point(x + center.Value.X, y + center.Value.Y));
-                points.Add(new Point(-x + center.Value.X, y + center.Value.Y));
-                points.Add(new Point(x + center.Value.X, -y + center.Value.Y));
-                points.Add(new Point(-x + center.Value.X, -y + center.Value.Y));
+                points.Add(new ColorPoint(shapeColor, new Point(x + center.Value.X, y + center.Value.Y)));
+                points.Add(new ColorPoint(shapeColor, new Point(-x + center.Value.X, y + center.Value.Y)));
+                points.Add(new ColorPoint(shapeColor, new Point(x + center.Value.X, -y + center.Value.Y)));
+                points.Add(new ColorPoint(shapeColor, new Point(-x + center.Value.X, -y + center.Value.Y)));
 
                 // If the generated point is on the  
                 // line x = y then the perimeter points 
                 // have already been printed 
                 if (x != y)
                 {
-                    points.Add(new Point(y + center.Value.X, x + center.Value.Y));
-                    points.Add(new Point(-y + center.Value.X, x + center.Value.Y));
-                    points.Add(new Point(y + center.Value.X, -x + center.Value.Y));
-                    points.Add(new Point(-y + center.Value.X, -x + center.Value.Y));
+                    points.Add(new ColorPoint(shapeColor, new Point(y + center.Value.X, x + center.Value.Y)));
+                    points.Add(new ColorPoint(shapeColor, new Point(-y + center.Value.X, x + center.Value.Y)));
+                    points.Add(new ColorPoint(shapeColor, new Point(y + center.Value.X, -x + center.Value.Y)));
+                    points.Add(new ColorPoint(shapeColor, new Point(-y + center.Value.X, -x + center.Value.Y)));
                 }
             }
 
@@ -151,6 +151,11 @@ namespace winforms_image_processor
         public override string howToDraw()
         {
             return "Click center and radius";
+        }
+
+        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        {
+            throw new NotImplementedException();
         }
     }
 }

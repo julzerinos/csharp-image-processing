@@ -10,13 +10,16 @@ namespace winforms_image_processor
     [Serializable]
     class Polygon : Shape
     {
-        List<Point> points = null;
-        int thickness;
+        public List<Point> points = null;
+        public int thickness;
+
+        protected Filler filler = null;
 
         public Polygon(Color color, int thicc) : base(color)
         {
             thickness = thicc - 1;
             shapeType = DrawingShape.POLY;
+            supportsAA = true;
         }
 
         public override int AddPoint(Point point)
@@ -29,6 +32,7 @@ namespace winforms_image_processor
                 if (dist < 100)
                 {
                     points.Add(points[0]);
+
                     return 1;
                 }
                 else
@@ -48,12 +52,30 @@ namespace winforms_image_processor
             return returnValue;
         }
 
-        public override List<Point> GetPixels()
+        public void SetFiller(Color color)
         {
-            var pixels = new List<Point>();
+            filler = new Filler(points, fillColor: color);
+        }
+
+        public void SetFiller(string filename)
+        {
+            filler = new Filler(points, fillImage: new Bitmap(filename));
+        }
+
+        public void UnSetFiller()
+        {
+            filler = null;
+        }
+
+        public override List<ColorPoint> GetPixels(params object[] param)
+        {
+            var pixels = new List<ColorPoint>();
 
             for (int i = 0; i <= points.Count - 2; i++)
                 pixels.AddRange(new MidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
+
+            if (filler != null)
+                pixels.AddRange(filler.FillPoints());
 
             return pixels;
         }
@@ -66,15 +88,19 @@ namespace winforms_image_processor
         public override void MovePoints(Point displacement)
         {
             for (int i = 0; i < points.Count; i++)
-               points[i] = points[i] + (Size)displacement;
+                points[i] = points[i] + (Size)displacement;
+
+            filler.UpdatePoints(points);
         }
 
-        public Bitmap SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
         {
-            for (int i = 0; i <= points.Count - 2; i++)
-                (new MidPointLine(shapeColor, thickness, points[i], points[i + 1])).SetPixelsAA(bmp);
+            var pixels = new List<ColorPoint>();
 
-            return bmp;
+            for (int i = 0; i <= points.Count - 2; i++)
+                pixels.AddRange((new MidPointLine(shapeColor, thickness, points[i], points[i + 1])).SetPixelsAA(bmp));
+
+            return pixels;
         }
 
         public override string ToString()

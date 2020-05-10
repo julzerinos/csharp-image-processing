@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace winforms_image_processor
 {
-    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY, CAPS };
+    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY, CAPS, RECT, CPOLY };
 
     public partial class DrawForm : Form
     {
@@ -73,14 +73,11 @@ namespace winforms_image_processor
             Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
             {
-                if (!antialiasingToolStripMenuItem.Checked || shape.shapeType == DrawingShape.CIRCLE || shape.shapeType == DrawingShape.CAPS)
+                if (!antialiasingToolStripMenuItem.Checked || !shape.supportsAA)
                     DrawShape(bmp, shape);
                 else
                 {
-                    if (shape.shapeType == DrawingShape.LINE)
-                        bmp = ((MidPointLine)shape).SetPixelsAA(bmp);
-                    else if (shape.shapeType == DrawingShape.POLY)
-                        bmp = ((Polygon)shape).SetPixelsAA(bmp);
+                    shape.SetPixelsAA(bmp);
                 }
             }
             pictureBox1.Image = bmp;
@@ -88,12 +85,12 @@ namespace winforms_image_processor
 
         Bitmap DrawShape(Bitmap bmp, Shape shape)
         {
-            foreach (var point in shape.GetPixels())
+            foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked))
             {
-                if (point.X >= pictureBox1.Width || point.Y >= pictureBox1.Height || point.X <= 0 || point.Y <= 0)
+                if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
                     continue;
 
-                bmp.SetPixelFast(point.X, point.Y, shape.shapeColor);
+                bmp.SetPixelFast(point.Point.X, point.Point.Y, point.Color);
             }
 
             return bmp;
@@ -103,6 +100,7 @@ namespace winforms_image_processor
         DrawingShape currentDrawingShape = DrawingShape.EMPTY;
         bool drawing = false;
         bool moving = false;
+        bool clipping = false;
         int index;
 
         void drawMode(
@@ -131,7 +129,6 @@ namespace winforms_image_processor
             UpdateLabel();
         }
 
-
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if (drawing)
@@ -149,6 +146,12 @@ namespace winforms_image_processor
 
                 if (1 == currentShape.AddPoint(e.Location))
                     drawMode(false);
+            }
+
+            if (clipping)
+            {
+                if (1 == currentShape.AddPoint(e.Location))
+                    clipMode(false, null);
             }
         }
 
@@ -170,6 +173,67 @@ namespace winforms_image_processor
         private void capsuleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawMode(true, new Capsule(colorDialog1.Color));
+        }
+
+        private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            drawMode(true, new Rectangle(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
+
+        void clipMode(bool status, Shape shape, int modify_index = -1)
+        {
+            if (!status && shapes[index].shapeType == DrawingShape.POLY)
+            {
+                ClippedPolygon cpoly = new ClippedPolygon((Polygon)shapes[index]);
+                cpoly.SetBoundingRect((Rectangle)currentShape);
+                shapes[index] = cpoly;
+                RefreshShapes();
+            }
+            else if (!status && shapes[index].shapeType == DrawingShape.CPOLY)
+            {
+                ((ClippedPolygon)shapes[index]).SetBoundingRect((Rectangle)currentShape);
+                RefreshShapes();
+            }
+
+            splitContainer2.Panel1.Enabled = !status;
+
+            index = modify_index;
+            clipping = status;
+
+            currentDrawingShape = shape == null ? DrawingShape.EMPTY : shape.shapeType;
+            currentShape = shape;
+            UpdateLabel();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            clipMode(true, new Rectangle(Color.Transparent, 1), listBox1.SelectedIndex);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (shapes.Count < 1)
+                return;
+
+            if ((listBox1.SelectedItem as Shape).shapeType != DrawingShape.POLY && (listBox1.SelectedItem as Shape).shapeType != DrawingShape.CPOLY)
+                return;
+
+            FillMenu fillMenuForm = new FillMenu();
+
+            switch (fillMenuForm.ShowDialog())
+            {
+                case DialogResult.Yes:
+                    (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.FillColor);
+                    break;
+                case DialogResult.No:
+                    (listBox1.SelectedItem as Polygon).SetFiller(fillMenuForm.filename);
+                    break;
+                case DialogResult.Cancel:
+                default:
+                    break;
+            }
+
+            RefreshShapes();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -194,10 +258,14 @@ namespace winforms_image_processor
                     drawMode(true, new MidPointLine(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
                     break;
                 case DrawingShape.POLY:
+                case DrawingShape.CPOLY:
                     drawMode(true, new Polygon(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
                     break;
                 case DrawingShape.CAPS:
                     drawMode(true, new Capsule(colorDialog1.Color), listBox1.SelectedIndex);
+                    break;
+                case DrawingShape.RECT:
+                    drawMode(true, new Rectangle(colorDialog1.Color, (int)numericUpDown1.Value), listBox1.SelectedIndex);
                     break;
 
                 default:
@@ -310,6 +378,11 @@ namespace winforms_image_processor
 
             ((Shape)listBox1.SelectedItem).MovePoints(moveend - (System.Drawing.Size)movestart);
 
+            RefreshShapes();
+        }
+
+        private void showClipBorderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             RefreshShapes();
         }
 

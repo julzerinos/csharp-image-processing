@@ -16,7 +16,7 @@ namespace winforms_image_processor
             var newValues = new byte[] { color.B, color.G, color.R, 255 };
 
             BitmapData data = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb
                 );
 
@@ -40,7 +40,7 @@ namespace winforms_image_processor
         public static Color GetPixelFast(this Bitmap bmp, int x, int y)
         {
             BitmapData data = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
                 );
 
@@ -69,7 +69,7 @@ namespace winforms_image_processor
             int width = bmp.Width;
             int height = bmp.Height;
             BitmapData srcData = bmp.LockBits(
-                new Rectangle(0, 0, width, height),
+                new System.Drawing.Rectangle(0, 0, width, height),
                 ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
                 );
 
@@ -88,7 +88,7 @@ namespace winforms_image_processor
             int width = bmp.Width;
             int height = bmp.Height;
             BitmapData srcData = bmp.LockBits(
-                new Rectangle(0, 0, width, height),
+                new System.Drawing.Rectangle(0, 0, width, height),
                 ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb
                 );
 
@@ -104,7 +104,7 @@ namespace winforms_image_processor
         public static void SetBitmapDataBytes(this Bitmap bmp, byte[] bytes)
         {
             BitmapData resData = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height),
                 ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb
                 );
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Dynamic;
 using System.Linq;
@@ -13,6 +14,7 @@ using Point = System.Drawing.Point;
 
 namespace winforms_image_processor
 {
+    [Serializable]
     public struct ActiveEdgeTableEntry
     {
         public double yMax;
@@ -48,8 +50,10 @@ namespace winforms_image_processor
         }
     }
 
+    [Serializable]
     class Filler
     {
+        List<Point> prePoints;
         List<ColorPoint> points = null;
 
         List<Point> vertices = new List<Point>();
@@ -58,6 +62,8 @@ namespace winforms_image_processor
 
         Color? fillColor;
         Bitmap fillImage;
+
+        Dictionary<Point, Color> imagePoints;
 
         public Filler(List<Point> pVertices, Color? fillColor = null, Bitmap fillImage = null)
         {
@@ -73,20 +79,23 @@ namespace winforms_image_processor
 
             this.fillColor = fillColor;
             if (fillImage != null)
+            {
                 this.fillImage = fillImage;
+            }
         }
 
         public void UpdatePoints(List<Point> points)
         {
             vertices = new List<Point>(points);
+            this.points = null;
         }
 
         public List<ColorPoint> FillPoints(Rectangle boundingRect = null)
         {
-            if (this.points != null)
+            if (this.points != null && boundingRect == null)
                 return this.points;
 
-            points = new List<ColorPoint>();
+            prePoints = new List<Point>();
 
             int k = 0;
             int i = indicies[k].Key;
@@ -114,13 +123,12 @@ namespace winforms_image_processor
                     return e1.xOfMin.CompareTo(e2.xOfMin);
                 });
 
-                for (int t = 0; t < AET.Count; t+=2)
+                for (int t = 0; t < AET.Count; t += 2)
                     for (int x1 = (int)AET[t].xOfMin; x1 <= AET[(t + 1) % AET.Count].xOfMin; x1++)
                     {
-                        Color col = fillColor.HasValue ? fillColor.Value : fillImage.GetPixelFast(x1 % fillImage.Width, y % fillImage.Height);
                         if (boundingRect != null && (x1 > boundingRect.GetCorner(1).X || x1 < boundingRect.GetCorner(0).X || y > boundingRect.GetCorner(0).Y || y < boundingRect.GetCorner(2).Y))
                             continue;
-                        points.Add(new ColorPoint(col, new Point(x1, y)));
+                        prePoints.Add(new Point(x1, y));
                     }
 
                 ++y;
@@ -133,7 +141,25 @@ namespace winforms_image_processor
 
             }
 
+            points = new List<ColorPoint>();
+
+            if (fillColor.HasValue)
+                foreach (var p in prePoints)
+                    points.Add(new ColorPoint(fillColor.Value, p));
+
+            else
+                foreach (var kv in fillImage.GetPixels(prePoints, true))
+                    points.Add(new ColorPoint(kv.Value, kv.Key));
+
             return points;
+        }
+
+        ColorPoint AddPoint(Point point)
+        {
+            if (fillColor.HasValue)
+                return new ColorPoint(fillColor.Value, point);
+
+            return new ColorPoint(fillImage.GetPixelFast(point.X % fillImage.Width, point.Y % fillImage.Height), point);
         }
     }
 }

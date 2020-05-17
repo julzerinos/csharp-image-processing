@@ -43,14 +43,27 @@ namespace winforms_image_processor
                 foreach (var shape in data)
                 {
                     var shaped = shape as Shape;
-                    if (shaped.shapeType == DrawingShape.CIRCLE)
-                        formatter.Serialize(stream, (MidPointCircle)shaped);
-                    else if (shaped.shapeType == DrawingShape.LINE)
-                        formatter.Serialize(stream, (MidPointLine)shaped);
-                    else if (shaped.shapeType == DrawingShape.POLY)
-                        formatter.Serialize(stream, (Polygon)shaped);
-                    else if (shaped.shapeType == DrawingShape.CAPS)
-                        formatter.Serialize(stream, (Capsule)shaped);
+                    switch (shaped.shapeType)
+                    {
+                        case DrawingShape.CIRCLE:
+                            formatter.Serialize(stream, (MidPointCircle)shaped);
+                            break;
+                        case DrawingShape.LINE:
+                            formatter.Serialize(stream, (MidPointLine)shaped);
+                            break;
+                        case DrawingShape.POLY:
+                            formatter.Serialize(stream, (Polygon)shaped);
+                            break;
+                        case DrawingShape.CPOLY:
+                            formatter.Serialize(stream, (ClippedPolygon)shaped);
+                            break;
+                        case DrawingShape.CAPS:
+                            formatter.Serialize(stream, (Capsule)shaped);
+                            break;
+                        case DrawingShape.RECT:
+                            formatter.Serialize(stream, (Rectangle)shaped);
+                            break;
+                    }
                 }
             }
         }

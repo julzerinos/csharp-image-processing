@@ -71,11 +71,11 @@ namespace winforms_image_processor
         {
             var pixels = new List<ColorPoint>();
 
-            for (int i = 0; i <= points.Count - 2; i++)
-                pixels.AddRange(new MidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
-
             if (filler != null)
                 pixels.AddRange(filler.FillPoints());
+
+            for (int i = 0; i <= points.Count - 2; i++)
+                pixels.AddRange(new MidPointLine(shapeColor, thickness, points[i], points[i + 1]).GetPixels());
 
             return pixels;
         }
@@ -90,15 +90,19 @@ namespace winforms_image_processor
             for (int i = 0; i < points.Count; i++)
                 points[i] = points[i] + (Size)displacement;
 
-            filler.UpdatePoints(points);
+            if (filler != null)
+                filler.UpdatePoints(points);
         }
 
-        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             var pixels = new List<ColorPoint>();
 
+            if (filler != null)
+                pixels.AddRange(filler.FillPoints());
+
             for (int i = 0; i <= points.Count - 2; i++)
-                pixels.AddRange((new MidPointLine(shapeColor, thickness, points[i], points[i + 1])).SetPixelsAA(bmp));
+                pixels.AddRange((new MidPointLine(shapeColor, thickness, points[i], points[i + 1])).GetPixelsAA(bmp));
 
             return pixels;
         }

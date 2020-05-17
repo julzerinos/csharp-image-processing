@@ -103,17 +103,17 @@ namespace winforms_image_processor
             return points;
         }
 
-        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             var points = new List<ColorPoint>();
 
             Point upperLeft = new Point(startPoint.Value.X, endPoint.Value.Y);
             Point lowerRight = new Point(endPoint.Value.X, startPoint.Value.Y);
 
-            points.AddRange(new MidPointLine(shapeColor, thickness, startPoint.Value, upperLeft).SetPixelsAA(bmp));
-            points.AddRange(new MidPointLine(shapeColor, thickness, upperLeft, endPoint.Value).SetPixelsAA(bmp));
-            points.AddRange(new MidPointLine(shapeColor, thickness, endPoint.Value, lowerRight).SetPixelsAA(bmp));
-            points.AddRange(new MidPointLine(shapeColor, thickness, lowerRight, startPoint.Value).SetPixelsAA(bmp));
+            points.AddRange(new MidPointLine(shapeColor, thickness, startPoint.Value, upperLeft).GetPixelsAA(bmp));
+            points.AddRange(new MidPointLine(shapeColor, thickness, upperLeft, endPoint.Value).GetPixelsAA(bmp));
+            points.AddRange(new MidPointLine(shapeColor, thickness, endPoint.Value, lowerRight).GetPixelsAA(bmp));
+            points.AddRange(new MidPointLine(shapeColor, thickness, lowerRight, startPoint.Value).GetPixelsAA(bmp));
 
             return points;
         }

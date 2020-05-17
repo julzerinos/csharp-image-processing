@@ -67,7 +67,7 @@ namespace winforms_image_processor
             return BresenhamMidPointAlgorithm(line.Start, line.End);
         }
 
-        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             Line line = new Line(startPoint.Value, endPoint.Value);
 

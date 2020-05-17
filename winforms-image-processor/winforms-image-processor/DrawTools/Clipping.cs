@@ -24,6 +24,7 @@ namespace winforms_image_processor
         }
     }
 
+    [Serializable]
     class Clipping
     {
         // https://pastebin.com/NA01gacf

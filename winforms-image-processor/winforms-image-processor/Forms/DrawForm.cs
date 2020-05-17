@@ -72,25 +72,30 @@ namespace winforms_image_processor
         {
             Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
-            {
-                if (!antialiasingToolStripMenuItem.Checked || !shape.supportsAA)
-                    DrawShape(bmp, shape);
-                else
-                {
-                    shape.SetPixelsAA(bmp);
-                }
-            }
+                DrawShape(bmp, shape);
+
             pictureBox1.Image = bmp;
         }
 
         Bitmap DrawShape(Bitmap bmp, Shape shape)
         {
-            foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked))
-            {
-                if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
-                    continue;
+            if (!antialiasingToolStripMenuItem.Checked || !shape.supportsAA)
+                foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked, colorDialog2.Color))
+                {
+                    if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
+                        continue;
 
-                bmp.SetPixelFast(point.Point.X, point.Point.Y, point.Color);
+                    bmp.SetPixelFast(point.Point.X, point.Point.Y, point.Color);
+                }
+            else
+            {
+                foreach (var point in shape.GetPixelsAA(bmp))
+                {
+                    if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
+                        continue;
+
+                    bmp.SetPixelFast(point.Point.X, point.Point.Y, point.Color);
+                }
             }
 
             return bmp;

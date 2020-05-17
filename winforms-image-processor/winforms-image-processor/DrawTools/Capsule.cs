@@ -80,7 +80,7 @@ namespace winforms_image_processor
             return "Click point 1, point 2 and radius.";
         }
 
-        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             throw new NotImplementedException();
         }

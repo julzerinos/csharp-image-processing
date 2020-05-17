@@ -153,7 +153,7 @@ namespace winforms_image_processor
             return "Click center and radius";
         }
 
-        public override List<ColorPoint> SetPixelsAA(Bitmap bmp)
+        public override List<ColorPoint> GetPixelsAA(Bitmap bmp)
         {
             throw new NotImplementedException();
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace winforms_image_processor
 {
-
+    [Serializable]
     public struct ColorPoint
     {
         public Color Color;
@@ -34,9 +34,11 @@ namespace winforms_image_processor
 
         abstract public int AddPoint(Point point);
 
-        abstract public List<ColorPoint> SetPixelsAA(Bitmap bmp);
+        abstract public List<ColorPoint> GetPixelsAA(Bitmap bmp);
 
         abstract public List<ColorPoint> GetPixels(params object[] param);
+        // Params:
+        // [0] : bool for clip border draw
 
         abstract public void MovePoints(Point displacement);
 

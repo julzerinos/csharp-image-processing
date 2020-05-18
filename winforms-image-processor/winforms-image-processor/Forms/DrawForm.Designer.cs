@@ -46,6 +46,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -57,7 +58,6 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
-            this.button5 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -254,8 +254,20 @@
             this.splitContainer2.SplitterDistance = 218;
             this.splitContainer2.TabIndex = 0;
             // 
+            // button5
+            // 
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(89, 159);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(41, 23);
+            this.button5.TabIndex = 8;
+            this.button5.Text = "Fill";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // button4
             // 
+            this.button4.Enabled = false;
             this.button4.Location = new System.Drawing.Point(47, 159);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(41, 23);
@@ -352,16 +364,7 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(133, 200);
             this.listBox1.TabIndex = 0;
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(89, 159);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(41, 23);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "Fill";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // DrawForm
             // 

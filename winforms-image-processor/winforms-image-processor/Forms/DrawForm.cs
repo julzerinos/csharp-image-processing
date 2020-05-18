@@ -117,6 +117,8 @@ namespace winforms_image_processor
             if (!status && index == -1)
             {
                 shapes.Add(currentShape);
+                if (shapes.Count == 1)
+                    listBox1_SelectedIndexChanged(null, null);
                 RefreshShapes();
             }
             else if (!status)
@@ -286,6 +288,8 @@ namespace winforms_image_processor
 
             shapes.RemoveAt(listBox1.SelectedIndex);
 
+            listBox1_SelectedIndexChanged(null, null);
+
             RefreshShapes();
         }
 
@@ -310,7 +314,6 @@ namespace winforms_image_processor
         {
             if (pictureBox1.Image == null)
                 pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-
 
             var filePath = string.Empty;
 
@@ -391,6 +394,24 @@ namespace winforms_image_processor
             RefreshShapes();
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        { 
+            if (shapes.Count < 1)
+            {
+                button4.Enabled = false;
+                button5.Enabled = false;
+                return;
+            }
 
+            if (listBox1.SelectedIndex == -1)
+            {
+                button4.Enabled = false;
+                button5.Enabled = false;
+                return;
+            }
+
+            button4.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
+            button5.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
+        }
     }
 }

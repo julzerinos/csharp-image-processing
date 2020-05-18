@@ -63,6 +63,9 @@ namespace winforms_image_processor
                         case DrawingShape.RECT:
                             formatter.Serialize(stream, (Rectangle)shaped);
                             break;
+                        case DrawingShape.FILL:
+                            formatter.Serialize(stream, (Fill)shaped);
+                            break;
                     }
                 }
             }

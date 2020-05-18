@@ -58,6 +58,8 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.colorDialog2 = new System.Windows.Forms.ColorDialog();
+            this.colorDialog3 = new System.Windows.Forms.ColorDialog();
+            this.floodFillToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -76,7 +78,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.settingsToolStripMenuItem});
+            this.settingsToolStripMenuItem,
+            this.floodFillToolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -366,6 +369,13 @@
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
+            // floodFillToolStripMenuItem1
+            // 
+            this.floodFillToolStripMenuItem1.Name = "floodFillToolStripMenuItem1";
+            this.floodFillToolStripMenuItem1.Size = new System.Drawing.Size(67, 20);
+            this.floodFillToolStripMenuItem1.Text = "Flood Fill";
+            this.floodFillToolStripMenuItem1.Click += new System.EventHandler(this.floodFillToolStripMenuItem1_Click);
+            // 
             // DrawForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -427,5 +437,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ToolStripMenuItem showClipBorderToolStripMenuItem;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ColorDialog colorDialog3;
+        private System.Windows.Forms.ToolStripMenuItem floodFillToolStripMenuItem1;
     }
 }

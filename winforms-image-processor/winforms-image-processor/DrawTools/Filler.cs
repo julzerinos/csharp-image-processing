@@ -161,5 +161,56 @@ namespace winforms_image_processor
 
             return new ColorPoint(fillImage.GetPixelFast(point.X % fillImage.Width, point.Y % fillImage.Height), point);
         }
+
+
+    }
+
+    public struct FillLog
+    {
+        public Color seedCol;
+        public Point seedPoint;
+
+        public FillLog(Color col, Point p)
+        {
+            seedCol = col;
+            seedPoint = p;
+        }
+    }
+
+    public static class FloodFiller
+    {
+        public static Bitmap FourWayFloodFill(Bitmap bmp, Color COLOR, Point q)
+        // https://stackoverflow.com/questions/1257117/a-working-non-recursive-floodfill-algorithm-written-in-c/1257195
+        {
+            int h = bmp.Height;
+            int w = bmp.Width;
+
+            if (q.Y < 0 || q.Y > h - 1 || q.X < 0 || q.X > w - 1)
+                return bmp;
+
+            Color SEED_COLOR = bmp.GetPixelFast(q.X, q.Y);
+
+            Stack<Point> stack = new Stack<Point>();
+            stack.Push(q);
+            while (stack.Count > 0)
+            {
+                Point p = stack.Pop();
+                int x = p.X;
+                int y = p.Y;
+                if (y < 0 || y > h - 1 || x < 0 || x > w - 1)
+                    continue;
+                Color val = bmp.GetPixelFast(x, y);
+                if (val == SEED_COLOR)
+                {
+                    bmp.SetPixelFast(x, y, COLOR);
+                    stack.Push(new Point(x + 1, y));
+                    stack.Push(new Point(x - 1, y));
+                    stack.Push(new Point(x, y + 1));
+                    stack.Push(new Point(x, y - 1));
+                }
+            }
+            return bmp;
+        }
+
     }
 }

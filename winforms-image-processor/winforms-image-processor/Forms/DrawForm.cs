@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace winforms_image_processor
 {
-    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY, CAPS, RECT, CPOLY };
+    public enum DrawingShape { EMPTY, LINE, CIRCLE, POLY, CAPS, RECT, CPOLY, FILL };
 
     public partial class DrawForm : Form
     {
@@ -72,7 +72,12 @@ namespace winforms_image_processor
         {
             Bitmap bmp = NewBitmap();
             foreach (var shape in shapes)
-                DrawShape(bmp, shape);
+            {
+                if (shape.shapeType == DrawingShape.FILL)
+                    bmp = FloodFiller.FourWayFloodFill(bmp, shape.shapeColor, ((Fill)shape).seedPoint);
+                else
+                    DrawShape(bmp, shape);
+            }
 
             pictureBox1.Image = bmp;
         }
@@ -80,7 +85,7 @@ namespace winforms_image_processor
         Bitmap DrawShape(Bitmap bmp, Shape shape)
         {
             if (!antialiasingToolStripMenuItem.Checked || !shape.supportsAA)
-                foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked, colorDialog2.Color))
+                foreach (var point in shape.GetPixels(showClipBorderToolStripMenuItem.Checked, colorDialog2.Color, bmp))
                 {
                     if (point.Point.X >= pictureBox1.Width || point.Point.Y >= pictureBox1.Height || point.Point.X <= 0 || point.Point.Y <= 0)
                         continue;
@@ -103,6 +108,9 @@ namespace winforms_image_processor
 
         Shape currentShape = null;
         DrawingShape currentDrawingShape = DrawingShape.EMPTY;
+
+        bool canRefresh = true;
+
         bool drawing = false;
         bool moving = false;
         bool clipping = false;
@@ -160,6 +168,13 @@ namespace winforms_image_processor
                 if (1 == currentShape.AddPoint(e.Location))
                     clipMode(false, null);
             }
+
+            if (flooding)
+            {
+                shapes.Add(new Fill(colorDialog1.Color, e.Location));
+                flooding = false;
+                RefreshShapes();
+            }
         }
 
         private void midpointCircleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -185,6 +200,13 @@ namespace winforms_image_processor
         private void rectangleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             drawMode(true, new Rectangle(colorDialog1.Color, (int)numericUpDown1.Value));
+        }
+
+        bool flooding = false;
+
+        private void floodFillToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            flooding = true;
         }
 
         void clipMode(bool status, Shape shape, int modify_index = -1)
@@ -395,7 +417,7 @@ namespace winforms_image_processor
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        { 
+        {
             if (shapes.Count < 1)
             {
                 button4.Enabled = false;
@@ -413,5 +435,12 @@ namespace winforms_image_processor
             button4.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
             button5.Enabled = (((Shape)listBox1.SelectedItem).shapeType == DrawingShape.POLY || ((Shape)listBox1.SelectedItem).shapeType == DrawingShape.CPOLY) ? true : false;
         }
+
+        private void selectColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            colorDialog3.ShowDialog();
+        }
+
+
     }
 }

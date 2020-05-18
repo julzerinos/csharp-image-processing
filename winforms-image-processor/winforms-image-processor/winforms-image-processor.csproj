@@ -52,6 +52,7 @@
     <Compile Include="CacheManager\CacheManager.cs" />
     <Compile Include="DrawTools\Clipping.cs" />
     <Compile Include="DrawTools\ClippedPolygon.cs" />
+    <Compile Include="DrawTools\Fill.cs" />
     <Compile Include="DrawTools\Filler.cs" />
     <Compile Include="DrawTools\Rectangle.cs" />
     <Compile Include="DrawTools\Capsule.cs" />
